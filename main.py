@@ -1,4 +1,4 @@
-from view.cli import show_menu, print_tables, print_event
+from view.cli import show_menu, print_tables
 from model.db import get_all_tables
 
 def main():
