@@ -8,11 +8,3 @@ def print_tables(tables):
     print("Tabelle presenti nel database:")
     for table in tables:
         print(f"- {table}")
-
-def print_event(event):
-    if event:
-        print(f"ID: {event.id_evento}")
-        print(f"Nome: {event.nome_evento}")
-        print(f"Data: {event.data_evento}")
-    else:
-        print("Evento non trovato.")

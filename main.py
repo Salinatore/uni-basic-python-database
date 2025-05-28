@@ -1,5 +1,5 @@
 from view.cli import show_menu, print_tables, print_event
-from model.db import get_all_tables, get_event_by_id
+from model.db import get_all_tables
 
 def main():
     while True:
@@ -8,10 +8,6 @@ def main():
         if choice == "1":
             events = get_all_tables()
             print_tables(events)
-        elif choice == "2":
-            event_id = input("Inserisci ID evento: ")
-            event = get_event_by_id(int(event_id))
-            print_event(event)
         elif choice == "0":
             break
         else:
