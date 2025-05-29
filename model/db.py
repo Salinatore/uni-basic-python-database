@@ -46,3 +46,12 @@ def get_material_by_dress_code(dress_code):
                  """
     )
     return _query_with_input(query, dress_code)
+
+def insert_work_group(start_work_date, description, group_type):
+    query = text(
+        """
+            INSERT INTO GRUPPO_DI_LAVORO (data_inizio_lavoro, data_fine_lavoro, descrizione, tipo_gruppo)
+            VALUES (:start_work_date, NULL, :description, :group_type);
+        """
+    )
+    session.execute(query, {"start_work_date": start_work_date, "description": description, "group_type": group_type})
