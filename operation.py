@@ -3,7 +3,7 @@ from view.cli import print_list
 
 
 OPERATIONS = {
-    1: {"desc": "Visualizzare tutte le stanze contenute in un immobile", "admin_only": False},
+    1: {"desc": "Visualizzare tutte le stanze contenute in un immobile", "admin_only": True},
     2: {"desc": "Visualizzazione dei materiali utilizzati per un determinato abito", "admin_only": False},
     3: {"desc": "Creazione di un gruppo di lavoro", "admin_only": False},
     4: {"desc": "Visualizzazione di tutti gli abiti indossati da una modella", "admin_only": False},

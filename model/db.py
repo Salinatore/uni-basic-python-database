@@ -24,6 +24,21 @@ def _query_with_input(query_text, code_id):
     return rows
 
 
+def get_userinfo_by_company_code(company_code):
+    query = text(
+        """
+            SELECT p.password_applicativo, p.amministratore_sistema
+            FROM PERSONALE p
+            WHERE p.codice_aziendale = :id
+        """
+    )
+    results = _query_with_input(query, company_code)
+    if results:
+        return results[0]
+    else:
+        return None
+
+
 def get_rooms_by_building_code(building_code):
     query = text(
         """
@@ -46,6 +61,7 @@ def get_material_by_dress_code(dress_code):
                  """
     )
     return _query_with_input(query, dress_code)
+
 
 def insert_work_group(start_work_date, description, group_type):
     query = text(
