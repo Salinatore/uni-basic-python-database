@@ -42,10 +42,10 @@ def get_userinfo_by_company_code(company_code):
 def get_rooms_by_building_code(building_code):
     query = text(
         """
-                    SELECT *
-                    FROM stanza s
-                    WHERE s.Div_numero_immobile = :id;
-                """
+            SELECT *
+            FROM stanza s
+            WHERE s.Div_numero_immobile = :id;
+        """
     )
     return _query_with_input(query, building_code)
 
@@ -53,12 +53,12 @@ def get_rooms_by_building_code(building_code):
 def get_material_by_dress_code(dress_code):
     query = text(
         """
-                    SELECT m.*, c.quantita_usata
-                    FROM composto c, abito a, materiale m
-                    WHERE c.codice_materiale = m.codice_materiale
-                    AND c.codice_abito = a.codice_abito
-                    AND c.codice_abito = :id;
-                 """
+            SELECT m.*, c.quantita_usata
+            FROM composto c, abito a, materiale m
+            WHERE c.codice_materiale = m.codice_materiale
+            AND c.codice_abito = a.codice_abito
+            AND c.codice_abito = :id;
+         """
     )
     return _query_with_input(query, dress_code)
 
@@ -71,3 +71,4 @@ def insert_work_group(start_work_date, description, group_type):
         """
     )
     session.execute(query, {"start_work_date": start_work_date, "description": description, "group_type": group_type})
+    session.commit()
