@@ -1,7 +1,7 @@
-def show_menu(operations):
+def show_menu(operations: list):
     print("\n--- Menu ---")
-    for key, info in operations.items():
-        print(f"{key}: {info}")
+    for i, operation in enumerate(operations, start=1):
+        print(f"{i}: {operation}")
     print("0. Esci")
 
 

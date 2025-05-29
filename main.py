@@ -1,7 +1,7 @@
 from enum import Enum
 import model.db
 from operation import OPERATIONS_HANDLERS, OPERATIONS
-from view.cli import show_menu, print_invalid_choice, print_unauthorized_choice
+from view.cli import show_menu, print_invalid_choice
 
 
 class UserType(Enum):
@@ -22,8 +22,8 @@ def login(max_attempts=3):
             attempts += 1
             continue
 
-        db_password = db_response['password_applicativo']
-        user_type = db_response['amministratore_sistema']
+        db_password = db_response.get('password_applicativo')
+        user_type = db_response.get('amministratore_sistema')
 
         if db_password != input_password:
             print("Password errata")
@@ -42,7 +42,7 @@ def query_loop(user_type: UserType):
             k: v for k, v in OPERATIONS.items()
             if not v["admin_only"] or user_type == UserType.ADMIN
         }
-        show_menu({k: v["desc"] for k, v in operations.items()})
+        show_menu([v["desc"] for k, v in operations.items()])
 
         choice = input("Scelta: ")
         try:
