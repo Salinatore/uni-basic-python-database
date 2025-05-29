@@ -7,7 +7,7 @@ wheels/
 *.egg-info
 
 #db configuration
-config.py
+model/config.py
 
 # Virtual environments
 .venv

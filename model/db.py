@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, MetaData, text
 from sqlalchemy.orm import sessionmaker
-from config import DATABASE_URL
+from model.config import DATABASE_URL
 import atexit
 
 # Create engine and session ONCE
