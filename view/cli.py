@@ -1,10 +1,12 @@
-def show_menu():
+def show_menu(operations):
     print("\n--- Menu ---")
-    print("1. Elenca eventi")
-    print("2. Mostra evento per ID")
+    for i, operation in enumerate(operations, start=1):
+        print(f"{i}. {operation}")
     print("0. Esci")
 
-def print_tables(tables):
-    print("Tabelle presenti nel database:")
-    for table in tables:
-        print(f"- {table}")
+def print_invalid_choice():
+    print("Scelta non valida. Riprova.")
+
+def print_list(items):
+    for item in items:
+        print(item)
