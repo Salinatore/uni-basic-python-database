@@ -72,3 +72,17 @@ def insert_work_group(start_work_date, description, group_type):
     )
     session.execute(query, {"start_work_date": start_work_date, "description": description, "group_type": group_type})
     session.commit()
+
+
+def get_dresses_by_model_code(model_code):
+    query = text(
+        """
+            SELECT a.* 
+            FROM modella m, spesa s, turno_della_modella_nella_sfilata t, abito a
+            WHERE m.CF = s.CF
+            AND s.codice_contrattuale = t.codice_contrattuale
+            AND t.codice_abito = :id;  
+        """
+    )
+    return _query_with_input(query, model_code)
+

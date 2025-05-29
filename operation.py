@@ -39,6 +39,52 @@ def _op_3():
     model.insert_work_group(start_work_date, description, group_type)
 
 
+def _op_4():
+    model_code = input("Inserisci il codice della modella di cui cercare gli abiti: ")
+    dresses = model.get_dresses_by_model_code(model_code)
+    print_list(dresses)
+
+
+def _op_5():
+    print("Not yet implemented")
+
+
+def _op_6():
+    print("Not yet implemented")
+
+
+def _op_7():
+    print("Not yet implemented")
+
+
+def _op_8():
+    print("Not yet implemented")
+
+
+def _op_9():
+    print("Not yet implemented")
+
+
+def _op_10():
+    print("Not yet implemented")
+
+
+def _op_11():
+    print("Not yet implemented")
+
+
+def _op_12():
+    print("Not yet implemented")
+
+
+def _op_13():
+    print("Not yet implemented")
+
+
+def _op_14():
+    print("Not yet implemented")
+
+
 OPERATIONS_HANDLERS = {
     1: _op_1,
     2: _op_2,
