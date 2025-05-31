@@ -52,6 +52,7 @@ class Gui:
     def _build_login_screen(self, login_action):
         self._window.geometry("350x220")
         self._window.title("Login")
+        self._window.protocol("WM_DELETE_WINDOW", lambda: self.close())
 
         frame = tk.Frame(self._window, padx=20, pady=20)
         frame.pack(expand=True)
@@ -134,7 +135,10 @@ class Gui:
             if result is None:
                 result_text = "Operazione completata con successo."
             elif isinstance(result, list):
-                result_text = "\n".join(str(item) for item in result)
+                if len(result) == 0:
+                    result_text = "Nessun risultato trovato."
+                else:
+                    result_text = "\n".join(str(item) for item in result)
             elif isinstance(result, dict):
                 result_text = "\n".join(f"{k}: {v}" for k, v in result.items())
             else:
@@ -143,7 +147,8 @@ class Gui:
         except Exception as e:
             result_label.config(text=f"❌ Errore durante l'esecuzione: {e}", fg="red")
 
-    def _destroy_view(self):
+    def _destroy_view(self) -> None:
+        self._window.protocol("WM_DELETE_WINDOW", lambda: self.show_login_screen())
         self._window.bind("<Return>", lambda event: None)
         for widget in self._window.winfo_children():
             widget.destroy()
