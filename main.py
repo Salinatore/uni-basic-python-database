@@ -1,6 +1,6 @@
 from enum import Enum
 import model.db
-from operation import OPERATIONS_HANDLERS, OPERATIONS
+from model.cli_operation import OPERATIONS_HANDLERS, OPERATIONS
 from view.cli import show_menu, print_invalid_choice
 
 
@@ -9,7 +9,7 @@ class UserType(Enum):
     WORKER = 2
 
 
-def login(max_attempts=3):
+def cli_login(max_attempts=3):
     attempts = 0
     while attempts < max_attempts:
         company_code = input("Inserisci il tuo codice aziendale: ")
@@ -66,8 +66,8 @@ def query_loop(user_type: UserType):
 
 
 def main():
-    user_type = login()
-    if user_type is not None:
+    user_type = cli_login()
+    if user_type:
         query_loop(user_type)
 
 
