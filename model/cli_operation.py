@@ -22,13 +22,13 @@ OPERATIONS = {
 
 def _op_1():
     building_code = input("Inserisci il codice immobile con cui fare la ricerca: ")
-    rooms = model.get_rooms_by_building_code(building_code)
+    rooms = model.get_rooms_from_building_code(building_code)
     print_list(rooms)
 
 
 def _op_2():
     dress_code = input("Inserisci il codice dell'abito con cui fare la ricerca: ")
-    materials = model.get_material_by_dress_code(dress_code)
+    materials = model.get_materials_from_dress_code(dress_code)
     print_list(materials)
 
 
@@ -41,7 +41,7 @@ def _op_3():
 
 def _op_4():
     model_code = input("Inserisci il codice della modella di cui cercare gli abiti: ")
-    dresses = model.get_dresses_by_model_code(model_code)
+    dresses = model.get_dresses_from_model_code(model_code)
     print_list(dresses)
 
 

@@ -24,7 +24,7 @@ def _query_with_input(query_text, code_id):
     return rows
 
 
-def get_userinfo_by_company_code(company_code):
+def get_userinfo_from_company_code(company_code):
     query = text(
         """
             SELECT p.password_applicativo, p.amministratore_sistema
@@ -39,7 +39,7 @@ def get_userinfo_by_company_code(company_code):
         return None
 
 
-def get_rooms_by_building_code(building_code):
+def get_rooms_from_building_code(building_code):
     query = text(
         """
             SELECT *
@@ -50,7 +50,7 @@ def get_rooms_by_building_code(building_code):
     return _query_with_input(query, building_code)
 
 
-def get_material_by_dress_code(dress_code):
+def get_materials_from_dress_code(dress_code):
     query = text(
         """
             SELECT m.*, c.quantita_usata
@@ -74,7 +74,7 @@ def insert_work_group(start_work_date, description, group_type):
     session.commit()
 
 
-def get_dresses_by_model_code(model_code):
+def get_dresses_from_model_code(model_code):
     query = text(
         """
             SELECT a.* 

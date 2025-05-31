@@ -15,7 +15,7 @@ def cli_login(max_attempts=3):
         company_code = input("Inserisci il tuo codice aziendale: ")
         input_password = input("Inserisci la tua password: ")
 
-        db_response = model.db.get_userinfo_by_company_code(company_code)
+        db_response = model.db.get_userinfo_from_company_code(company_code)
 
         if not db_response:
             print("Codice aziendale non trovato.")

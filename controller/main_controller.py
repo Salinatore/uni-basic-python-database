@@ -13,7 +13,7 @@ class Controller:
 
 
     def _login_handler(self, company_code: str, password: str) -> None:
-        db_response = db.get_userinfo_by_company_code(company_code)
+        db_response = db.get_userinfo_from_company_code(company_code)
         if db_response is None:
             self._gui.show_company_code_not_found()
             return
