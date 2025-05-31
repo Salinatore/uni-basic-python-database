@@ -19,8 +19,7 @@ class Operation:
     input_fields: List[str] = field(default_factory=list)
     operation_handler: Callable[..., Any] = field(default=default_operation)
 
-
-OPERATIONS = [
+USER_OPERATIONS = [
     Operation("Visualizzare tutte le stanze contenute in un immobile", True, ["codice immobile"], get_rooms_from_building_code),
     Operation("Visualizzazione dei materiali utilizzati per un determinato abito", True, ["codice abito"], get_materials_from_dress_code),
     Operation("Creazione di un gruppo di lavoro", True, ["data inizio lavoro", "descrizione", "tipo gruppo"], insert_work_group),

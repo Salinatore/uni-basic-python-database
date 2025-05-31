@@ -1,6 +1,6 @@
 from model import db
 from view.gui import Gui
-from model.operation import OPERATIONS
+from model.operation_user import USER_OPERATIONS
 
 class Controller:
 
@@ -26,7 +26,7 @@ class Controller:
             return
 
         if user_type == 0:
-            non_admin_operations = [op for op in OPERATIONS if not op.admin_only]
+            non_admin_operations = [op for op in USER_OPERATIONS if not op.admin_only]
             self._gui.show_worker_screen(non_admin_operations)
         else:
-            self._gui.show_admin_screen(OPERATIONS)
+            self._gui.show_admin_screen(USER_OPERATIONS)

@@ -3,7 +3,7 @@ from functools import partial
 from tkinter import Tk, messagebox
 from typing import List
 
-from model.operation import Operation
+from model.operation_user import Operation
 
 
 class Gui:
