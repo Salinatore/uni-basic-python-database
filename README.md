@@ -7,7 +7,7 @@ uv sync
 ```
 
 Before running the application, make sure to set up your database configuration file in model/config.py.
-Here an example:
+Here is an example:
 
 ```python
 from urllib.parse import quote_plus
