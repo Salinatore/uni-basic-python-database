@@ -50,27 +50,27 @@ class Gui:
 
 
     def _build_login_screen(self, login_action):
-        self._window.geometry("300x200")
+        self._window.geometry("350x220")
         self._window.title("Login")
 
-        label1 = tk.Label(self._window, text="Codice Aziendale:")
-        label1.pack(pady=(10, 0))
-        entry1 = tk.Entry(self._window, width=30)
-        entry1.pack(pady=5)
+        frame = tk.Frame(self._window, padx=20, pady=20)
+        frame.pack(expand=True)
 
-        label2 = tk.Label(self._window, text="Password:")
-        label2.pack(pady=(10, 0))
-        entry2 = tk.Entry(self._window, width=30, show="*")
-        entry2.pack(pady=5)
+        tk.Label(frame, text="Codice Aziendale:").grid(row=0, column=0, sticky="w", pady=(0, 5))
+        entry1 = tk.Entry(frame, width=30)
+        entry1.grid(row=1, column=0, pady=(0, 15))
+
+        tk.Label(frame, text="Password:").grid(row=2, column=0, sticky="w", pady=(0, 5))
+        entry2 = tk.Entry(frame, width=30, show="*")
+        entry2.grid(row=3, column=0, pady=(0, 15))
 
         def submit_login(event=None):
             login_action(entry1.get(), entry2.get())
 
-        button = tk.Button(self._window, text="Invia", command=submit_login)
-        button.pack(pady=20)
+        login_btn = tk.Button(frame, text="Accedi", width=15, command=submit_login)
+        login_btn.grid(row=4, column=0, pady=10)
 
         self._window.bind("<Return>", submit_login)
-
         entry1.focus()
 
 
@@ -115,23 +115,35 @@ class Gui:
                 no_input_label = tk.Label(op_frame, text="No input required", anchor="w")
                 no_input_label.pack(anchor="w", pady=(0, 5))
 
+            # Label to display the result
+            result_label = tk.Label(op_frame, text="", anchor="w", justify="left", wraplength=600, fg="blue")
+            result_label.pack(anchor="w", pady=(5, 0))
+
+            # Execute button
             btn = tk.Button(op_frame, text="Execute",
-                            command=partial(self._execute_operation, op, entries))
-            btn.pack(pady=5)
+                            command=partial(self._execute_operation, op, entries, result_label))
+            btn.pack(pady=(5, 0))
 
-
-    def _execute_operation(self, operation: Operation, entries: dict[str, tk.Entry]) -> None:
+    def _execute_operation(self, operation: Operation, entries: dict[str, tk.Entry], result_label: tk.Label) -> None:
         args = [entries[field].get().strip() for field in operation.input_fields]
         if any(not arg for arg in args) and operation.input_fields:
-            messagebox.showwarning("Warning", "Please fill all required fields.")
+            result_label.config(text="⚠️ Per favore, completa tutti i campi richiesti.", fg="orange")
             return
         try:
             result = operation.operation_handler(*args)
-            messagebox.showinfo("Result", f"Operation '{operation.desc}' completed.\nResult:\n{result}")
+            if result is None:
+                result_text = "Operazione completata con successo."
+            elif isinstance(result, list):
+                result_text = "\n".join(str(item) for item in result)
+            elif isinstance(result, dict):
+                result_text = "\n".join(f"{k}: {v}" for k, v in result.items())
+            else:
+                result_text = str(result)
+            result_label.config(text=result_text, fg="white")
         except Exception as e:
-            messagebox.showerror(self.ERROR_TITLE, f"Error executing operation:\n{e}")
-
+            result_label.config(text=f"❌ Errore durante l'esecuzione: {e}", fg="red")
 
     def _destroy_view(self):
+        self._window.bind("<Return>", lambda event: None)
         for widget in self._window.winfo_children():
             widget.destroy()
