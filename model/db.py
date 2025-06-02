@@ -270,40 +270,52 @@ def get_highest_paid_work_group():
 
 
 def change_employee_work_group(cf, new_codice_lavoro):
-    current_data = (
-        session.execute(
-            text(
-                "SELECT codice_lavoro, occupazione_presente_inizio FROM PERSONALE WHERE CF = :cf"
-            ),
-            {"cf": cf},
-        )
-        .mappings()
-        .first()
+    previews_work_code_query = text(
+        """
+            SELECT codice_lavoro, occupazione_presente_inizio
+            FROM PERSONALE
+            WHERE CF = :cf;
+        """
     )
+    output = _query_with_input(previews_work_code_query, {"cf": cf})
 
-    if not current_data:
-        raise ValueError(f"Dipendente con CF {cf} non trovato")
+    if output:
+        previews_work_code = output[0]["codice_lavoro"]
+        previews_work_start = output[0]["occupazione_presente_inizio"]
+    else:
+        raise ValueError("Il CF specificato non esiste.")
 
-    codice_lavoro_vecchio = current_data["codice_lavoro"]
-    inizio_lavoro_vecchio = current_data["occupazione_presente_inizio"]
-
+    insert_old_occupation_query = text(
+        """
+            INSERT INTO OCCUPAZIONE_PASSATA (codice_lavoro, inizio_lavoro, CF, fine_lavoro) 
+            VALUES (:previews_work_code, :previews_work_start, :cf, NOW());
+        """
+    )
     session.execute(
-        text("""
-            INSERT INTO OCCUPAZIONE_PASSATA (codice_lavoro, occupazione_presente_inizio, CF, data_fine)
-            VALUES (:codice_lavoro_vecchio, :inizio_lavoro_vecchio, :cf, NOW())
-        """),
+        insert_old_occupation_query,
         {
-            "codice_lavoro_vecchio": codice_lavoro_vecchio,
-            "inizio_lavoro_vecchio": inizio_lavoro_vecchio,
+            "previews_work_code": previews_work_code,
+            "previews_work_start": previews_work_start,
             "cf": cf,
         },
     )
+    session.commit()
 
-    session.execute(
-        text("""
+    update_current_occupation_query = text(
+        """
             UPDATE PERSONALE
-            SET occupazione_presente_inizio = NOW(), codice_lavoro = :new_codice_lavoro
-            WHERE CF = :cf
-        """),
-        {"new_codice_lavoro": new_codice_lavoro, "cf": cf},
+            SET codice_lavoro = :new_codice_lavoro, occupazione_presente_inizio = NOW()
+            WHERE CF = :cf;
+        """
     )
+    session.execute(
+        update_current_occupation_query,
+        {
+            "new_codice_lavoro": new_codice_lavoro,
+            "cf": cf,
+        },
+    )
+    session.commit()
+
+
+
