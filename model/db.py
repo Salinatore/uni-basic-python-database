@@ -12,9 +12,11 @@ session = Session()
 metadata = MetaData()
 metadata.reflect(bind=engine)
 
+
 @atexit.register
 def _shutdown_connection():
     session.close()
+
 
 def _query_with_input(query_text, params):
     if not isinstance(params, dict):
@@ -22,6 +24,7 @@ def _query_with_input(query_text, params):
     result = session.execute(query_text, params)
     rows = [dict(row) for row in result.mappings()]
     return rows
+
 
 def get_userinfo_from_company_code(company_code):
     query = text(
@@ -37,6 +40,7 @@ def get_userinfo_from_company_code(company_code):
     else:
         return None
 
+
 def get_rooms_from_building_code(building_code):
     query = text(
         """
@@ -46,6 +50,7 @@ def get_rooms_from_building_code(building_code):
         """
     )
     return _query_with_input(query, {"id": building_code})
+
 
 def get_materials_from_dress_code(dress_code):
     query = text(
@@ -59,6 +64,7 @@ def get_materials_from_dress_code(dress_code):
     )
     return _query_with_input(query, {"id": dress_code})
 
+
 def insert_work_group(start_work_date, description, group_type):
     query = text(
         """
@@ -66,8 +72,16 @@ def insert_work_group(start_work_date, description, group_type):
             VALUES (:start_work_date, NULL, :description, :group_type);
         """
     )
-    session.execute(query, {"start_work_date": start_work_date, "description": description, "group_type": group_type})
+    session.execute(
+        query,
+        {
+            "start_work_date": start_work_date,
+            "description": description,
+            "group_type": group_type,
+        },
+    )
     session.commit()
+
 
 def get_dresses_from_model_code(model_code):
     query = text(
@@ -81,6 +95,7 @@ def get_dresses_from_model_code(model_code):
     )
     return _query_with_input(query, {"id": model_code})
 
+
 def insert_participation(event_code, person_cf, cost):
     query = text(
         """
@@ -88,12 +103,11 @@ def insert_participation(event_code, person_cf, cost):
             VALUES (:event_code, :person_cf, :cost);
         """
     )
-    session.execute(query, {
-        "event_code": event_code,
-        "person_cf": person_cf,
-        "cost": cost
-    })
+    session.execute(
+        query, {"event_code": event_code, "person_cf": person_cf, "cost": cost}
+    )
     session.commit()
+
 
 def get_work_groups_from_room_number(room_number):
     query = text(
@@ -108,6 +122,7 @@ def get_work_groups_from_room_number(room_number):
     )
     return _query_with_input(query, {"id": room_number})
 
+
 def get_max_paid_model_contract():
     query = text(
         """
@@ -118,6 +133,7 @@ def get_max_paid_model_contract():
     )
     result = session.execute(query).scalar()
     return result
+
 
 def get_event_with_most_participants():
     query = text(
@@ -133,6 +149,7 @@ def get_event_with_most_participants():
     results = session.execute(query).scalars().all()
     return results
 
+
 def get_dresses_from_event_code(event_code):
     query = text(
         """
@@ -144,7 +161,10 @@ def get_dresses_from_event_code(event_code):
     )
     return _query_with_input(query, {"id": event_code})
 
-def insert_work_shift(new_start, new_end, building_code, floor_code, room_code, codice_lavoro):
+
+def insert_work_shift(
+    new_start, new_end, building_code, floor_code, room_code, codice_lavoro
+):
     query = text(
         """
             INSERT INTO TURNO_di_LAVORO (
@@ -169,33 +189,49 @@ def insert_work_shift(new_start, new_end, building_code, floor_code, room_code, 
             );
         """
     )
-    session.execute(query, {
-        "new_start": new_start,
-        "new_end": new_end,
-        "building_code": building_code,
-        "floor_code": floor_code,
-        "room_code": room_code,
-        "codice_lavoro": codice_lavoro
-    })
+    session.execute(
+        query,
+        {
+            "new_start": new_start,
+            "new_end": new_end,
+            "building_code": building_code,
+            "floor_code": floor_code,
+            "room_code": room_code,
+            "codice_lavoro": codice_lavoro,
+        },
+    )
     session.commit()
 
-def insert_new_expense(id_spesa, data_ora, costo, cf=None, codice_contrattuale=None, codice_materiale=None, altro_campo=None):
+
+def insert_new_expense(
+    id_spesa,
+    data_ora,
+    costo,
+    cf=None,
+    codice_contrattuale=None,
+    codice_materiale=None,
+    altro_campo=None,
+):
     query = text(
         """
             INSERT INTO SPESE
             VALUES (:id_spesa, :data_ora, :costo, :cf, :altro_campo1, :codice_materiale, :altro_campo2);
         """
     )
-    session.execute(query, {
-        "id_spesa": id_spesa,
-        "data_ora": data_ora,
-        "costo": costo,
-        "cf": cf,
-        "altro_campo1": altro_campo,
-        "codice_materiale": codice_materiale,
-        "altro_campo2": None
-    })
+    session.execute(
+        query,
+        {
+            "id_spesa": id_spesa,
+            "data_ora": data_ora,
+            "costo": costo,
+            "cf": cf,
+            "altro_campo1": altro_campo,
+            "codice_materiale": codice_materiale,
+            "altro_campo2": None,
+        },
+    )
     session.commit()
+
 
 def get_total_hours_worked_by_employee(cf):
     query = text(
@@ -209,6 +245,7 @@ def get_total_hours_worked_by_employee(cf):
     )
     result = session.execute(query, {"cf": cf}).scalar()
     return result
+
 
 def get_highest_paid_work_group():
     query = text(
@@ -231,12 +268,19 @@ def get_highest_paid_work_group():
     results = session.execute(query).mappings().all()
     return results
 
+
 def change_employee_work_group(cf, new_codice_lavoro):
     with session.begin():
-        current_data = session.execute(
-            text("SELECT codice_lavoro, occupazione_presente_inizio FROM PERSONALE WHERE CF = :cf"),
-            {"cf": cf}
-        ).mappings().first()
+        current_data = (
+            session.execute(
+                text(
+                    "SELECT codice_lavoro, occupazione_presente_inizio FROM PERSONALE WHERE CF = :cf"
+                ),
+                {"cf": cf},
+            )
+            .mappings()
+            .first()
+        )
 
         if not current_data:
             raise ValueError(f"Dipendente con CF {cf} non trovato")
@@ -252,8 +296,8 @@ def change_employee_work_group(cf, new_codice_lavoro):
             {
                 "codice_lavoro_vecchio": codice_lavoro_vecchio,
                 "inizio_lavoro_vecchio": inizio_lavoro_vecchio,
-                "cf": cf
-            }
+                "cf": cf,
+            },
         )
 
         session.execute(
@@ -262,8 +306,5 @@ def change_employee_work_group(cf, new_codice_lavoro):
                 SET occupazione_presente_inizio = NOW(), codice_lavoro = :new_codice_lavoro
                 WHERE CF = :cf
             """),
-            {
-                "new_codice_lavoro": new_codice_lavoro,
-                "cf": cf
-            }
+            {"new_codice_lavoro": new_codice_lavoro, "cf": cf},
         )

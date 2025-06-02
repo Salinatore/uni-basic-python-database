@@ -2,15 +2,13 @@ from model import db
 from view.gui import Gui
 from model.operation_user import USER_OPERATIONS
 
-class Controller:
 
+class Controller:
     def __init__(self):
         self._gui = Gui(self._login_handler)
 
-
     def start(self):
         self._gui.start()
-
 
     def _login_handler(self, company_code: str, password: str) -> None:
         db_response = db.get_userinfo_from_company_code(company_code)

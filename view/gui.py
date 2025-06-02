@@ -7,7 +7,6 @@ from model.operation_user import Operation
 
 
 class Gui:
-
     ERROR_TITLE = "Errore"
 
     def __init__(self, login_action):
@@ -17,37 +16,29 @@ class Gui:
         self._window.withdraw()  # Hide the window initially
         self._window.deiconify()
 
-
     def start(self):
         self.show_login_screen()
         self._window.mainloop()
-
 
     def close(self):
         self._window.quit()
         self._window.destroy()
 
-
     def show_invalid_password(self):
         messagebox.showerror(self.ERROR_TITLE, "Password non valida")
 
-
     def show_company_code_not_found(self):
         messagebox.showerror(self.ERROR_TITLE, "Codice azienda non valido")
-
 
     def show_login_screen(self):
         self._destroy_view()
         self._build_login_screen(self._login_action)
 
-
     def show_worker_screen(self, operations_dic):
         self._build_operation_screen(operations_dic, "Worker")
 
-
     def show_admin_screen(self, operations_dic):
         self._build_operation_screen(operations_dic, "Admin")
-
 
     def _build_login_screen(self, login_action):
         self._window.geometry("350x220")
@@ -57,7 +48,9 @@ class Gui:
         frame = tk.Frame(self._window, padx=20, pady=20)
         frame.pack(expand=True)
 
-        tk.Label(frame, text="Codice Aziendale:").grid(row=0, column=0, sticky="w", pady=(0, 5))
+        tk.Label(frame, text="Codice Aziendale:").grid(
+            row=0, column=0, sticky="w", pady=(0, 5)
+        )
         entry1 = tk.Entry(frame, width=30)
         entry1.grid(row=1, column=0, pady=(0, 15))
 
@@ -74,8 +67,9 @@ class Gui:
         self._window.bind("<Return>", submit_login)
         entry1.focus()
 
-
-    def _build_operation_screen(self, operations_list: List[Operation], screen_name: str) -> None:
+    def _build_operation_screen(
+        self, operations_list: List[Operation], screen_name: str
+    ) -> None:
         self._destroy_view()
         self._window.geometry("700x600")
         self._window.title(screen_name)
@@ -88,8 +82,7 @@ class Gui:
         scrollable_frame = tk.Frame(canvas)
 
         scrollable_frame.bind(
-            "<Configure>",
-            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+            "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
         )
 
         canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
@@ -99,8 +92,12 @@ class Gui:
         scrollbar.pack(side="right", fill="y")
 
         for op in operations_list:
-            op_frame = tk.LabelFrame(scrollable_frame, text=f"[ADMIN] {op.desc}" if op.admin_only else op.desc,
-                                     padx=10, pady=10)
+            op_frame = tk.LabelFrame(
+                scrollable_frame,
+                text=f"[ADMIN] {op.desc}" if op.admin_only else op.desc,
+                padx=10,
+                pady=10,
+            )
             op_frame.pack(fill="x", pady=5)
 
             entries = {}
@@ -113,22 +110,33 @@ class Gui:
                     entry.pack(fill="x", pady=(0, 5))
                     entries[field_name] = entry
             else:
-                no_input_label = tk.Label(op_frame, text="No input required", anchor="w")
+                no_input_label = tk.Label(
+                    op_frame, text="No input required", anchor="w"
+                )
                 no_input_label.pack(anchor="w", pady=(0, 5))
 
             # Label to display the result
-            result_label = tk.Label(op_frame, text="", anchor="w", justify="left", wraplength=600, fg="blue")
+            result_label = tk.Label(
+                op_frame, text="", anchor="w", justify="left", wraplength=600, fg="blue"
+            )
             result_label.pack(anchor="w", pady=(5, 0))
 
             # Execute button
-            btn = tk.Button(op_frame, text="Execute",
-                            command=partial(self._execute_operation, op, entries, result_label))
+            btn = tk.Button(
+                op_frame,
+                text="Execute",
+                command=partial(self._execute_operation, op, entries, result_label),
+            )
             btn.pack(pady=(5, 0))
 
-    def _execute_operation(self, operation: Operation, entries: dict[str, tk.Entry], result_label: tk.Label) -> None:
+    def _execute_operation(
+        self, operation: Operation, entries: dict[str, tk.Entry], result_label: tk.Label
+    ) -> None:
         args = [entries[field].get().strip() for field in operation.input_fields]
         if any(not arg for arg in args) and operation.input_fields:
-            result_label.config(text="⚠️ Per favore, completa tutti i campi richiesti.", fg="orange")
+            result_label.config(
+                text="⚠️ Per favore, completa tutti i campi richiesti.", fg="orange"
+            )
             return
         try:
             result = operation.operation_handler(*args)
