@@ -4,8 +4,6 @@
 -- * DB-MAIN version: 11.0.2
 -- * Generator date: Sep 14 2021
 -- * Generation date: Tue May 27 18:07:35 2025
--- * LUN file: C:\users\gardo\Desktop\Local\Ale\Uni\24-25\SecondSemester\Basi di Dati\Progetto\PROGETTO BASI TOT.lun
--- * Schema: Brand_di_Moda_Logico_Buono/1
 -- *********************************************
 
 
