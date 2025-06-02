@@ -44,7 +44,7 @@ def get_userinfo_from_company_code(company_code):
 def get_rooms_from_building_code(building_code):
     query = text(
         """
-            SELECT *
+            SELECT Div_numero_immobile AS numero_immobile, Div_numero AS numero_piano, numero AS numero_stanza, partecipanti_massimi, tipo_stanza, capienza, codice_lavoro AS codice_gruppo_lavoro
             FROM stanza s
             WHERE s.Div_numero_immobile = :id;
         """
@@ -270,41 +270,40 @@ def get_highest_paid_work_group():
 
 
 def change_employee_work_group(cf, new_codice_lavoro):
-    with session.begin():
-        current_data = (
-            session.execute(
-                text(
-                    "SELECT codice_lavoro, occupazione_presente_inizio FROM PERSONALE WHERE CF = :cf"
-                ),
-                {"cf": cf},
-            )
-            .mappings()
-            .first()
-        )
-
-        if not current_data:
-            raise ValueError(f"Dipendente con CF {cf} non trovato")
-
-        codice_lavoro_vecchio = current_data["codice_lavoro"]
-        inizio_lavoro_vecchio = current_data["occupazione_presente_inizio"]
-
+    current_data = (
         session.execute(
-            text("""
-                INSERT INTO OCCUPAZIONE_PASSATA (codice_lavoro, occupazione_presente_inizio, CF, data_fine)
-                VALUES (:codice_lavoro_vecchio, :inizio_lavoro_vecchio, :cf, NOW())
-            """),
-            {
-                "codice_lavoro_vecchio": codice_lavoro_vecchio,
-                "inizio_lavoro_vecchio": inizio_lavoro_vecchio,
-                "cf": cf,
-            },
+            text(
+                "SELECT codice_lavoro, occupazione_presente_inizio FROM PERSONALE WHERE CF = :cf"
+            ),
+            {"cf": cf},
         )
+        .mappings()
+        .first()
+    )
 
-        session.execute(
-            text("""
-                UPDATE PERSONALE
-                SET occupazione_presente_inizio = NOW(), codice_lavoro = :new_codice_lavoro
-                WHERE CF = :cf
-            """),
-            {"new_codice_lavoro": new_codice_lavoro, "cf": cf},
-        )
+    if not current_data:
+        raise ValueError(f"Dipendente con CF {cf} non trovato")
+
+    codice_lavoro_vecchio = current_data["codice_lavoro"]
+    inizio_lavoro_vecchio = current_data["occupazione_presente_inizio"]
+
+    session.execute(
+        text("""
+            INSERT INTO OCCUPAZIONE_PASSATA (codice_lavoro, occupazione_presente_inizio, CF, data_fine)
+            VALUES (:codice_lavoro_vecchio, :inizio_lavoro_vecchio, :cf, NOW())
+        """),
+        {
+            "codice_lavoro_vecchio": codice_lavoro_vecchio,
+            "inizio_lavoro_vecchio": inizio_lavoro_vecchio,
+            "cf": cf,
+        },
+    )
+
+    session.execute(
+        text("""
+            UPDATE PERSONALE
+            SET occupazione_presente_inizio = NOW(), codice_lavoro = :new_codice_lavoro
+            WHERE CF = :cf
+        """),
+        {"new_codice_lavoro": new_codice_lavoro, "cf": cf},
+    )
