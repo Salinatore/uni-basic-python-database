@@ -123,24 +123,60 @@ class Gui:
         op_window = tk.Toplevel(self._window)
         op_window.title(operation.desc)
         op_window.geometry("600x500")
-        op_window.resizable(False, False)
+        op_window.resizable(True, True)  # Allow resizing
 
         frame = tk.Frame(op_window, padx=20, pady=20)
         frame.pack(fill=tk.BOTH, expand=True)
 
-        tk.Label(frame, text=operation.desc, font=("Arial", 14)).pack(pady=(0, 10))
+        # Operation title
+        tk.Label(frame, text=operation.desc, font=("Arial", 14, "bold")).pack(pady=(0, 10))
 
         entries = {}
-        if operation.input_fields:
-            for field in operation.input_fields:
-                label = tk.Label(frame, text=field + ":")
-                label.pack(anchor="w")
-                entry = tk.Entry(frame, width=40)
-                entry.pack(fill="x", pady=(0, 10))
-                entries[field] = entry
-        else:
-            tk.Label(frame, text="No input required.").pack(pady=(0, 10))
 
+        if operation.input_fields:
+            # Support different input types per field (if input_fields is a list of dicts)
+            for field in operation.input_fields:
+                # If field is a string, default to simple text entry
+                if isinstance(field, str):
+                    label = tk.Label(frame, text=field + ":")
+                    label.pack(anchor="w")
+                    entry = tk.Entry(frame, width=40)
+                    entry.pack(fill="x", pady=(0, 10))
+                    entries[field] = entry
+
+                # If field is a dict, expect keys like "name", "type", "options"
+                elif isinstance(field, dict):
+                    field_name = field.get("name", "Field")
+                    field_type = field.get("type", "text")
+
+                    label = tk.Label(frame, text=field_name + ":")
+                    label.pack(anchor="w")
+
+                    if field_type == "dropdown":
+                        combo = ttk.Combobox(
+                            frame,
+                            values=field.get("options", []),
+                            state="readonly",
+                            width=38,
+                            font=("Arial", 11),
+                        )
+                        combo.pack(fill="x", pady=(0, 10))
+                        entries[field_name] = combo
+
+                    elif field_type == "checkbox":
+                        var = tk.BooleanVar()
+                        check = tk.Checkbutton(frame, variable=var)
+                        check.pack(anchor="w", pady=(0, 10))
+                        entries[field_name] = var
+
+                    else:  # Default: text entry
+                        entry = tk.Entry(frame, width=40)
+                        entry.pack(fill="x", pady=(0, 10))
+                        entries[field_name] = entry
+        else:
+            tk.Label(frame, text="Nessun input richiesto.").pack(pady=(0, 10))
+
+        # Result display area with scrollbar
         result_frame = tk.Frame(frame)
         result_frame.pack(fill="both", expand=True, pady=(10, 0))
 
@@ -160,6 +196,7 @@ class Gui:
         result_text.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
+        # Execute button
         execute_btn = tk.Button(
             frame,
             text="Esegui",
