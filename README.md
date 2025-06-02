@@ -25,7 +25,9 @@ password_enc = quote_plus(DB_PASSWORD)
 DATABASE_URL = f"mysql+pymysql://{DB_USERNAME}:{password_enc}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 ```
 
-Before running the application, make sure to set up your database configuration file in model/config.py. Then, create the database by executing the seed.sql file using the following command:
+Before running the application, make sure to set up your database configuration file in model/config.py.
+Then, create the database by executing the seed.sql file using the following command:
+
 ```bash
 mysql -u root -p  < seed.sql
 ```
