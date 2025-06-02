@@ -14,8 +14,8 @@ from urllib.parse import quote_plus
 
 DB_USERNAME = ""
 DB_PASSWORD = ""
-DB_PORT = ""
-DB_HOST = ""
+DB_PORT = 3306 #default MySQL port
+DB_HOST = ""  
 DB_NAME = ""
 
 password_enc = quote_plus(DB_PASSWORD)
