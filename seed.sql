@@ -1405,7 +1405,8 @@ INSERT INTO PERSONALE (
 ('2020-10-11 07:45:00', 'GLLFNC76G14L219S', 'Francesca', 'Gallo', 366223344, 'Via Firenze', 5, 'tecnico', '2021-01-20', 10, 1, false, 'stu34'),
 ('2019-12-05 13:00:00', 'TRNTNI85H20F205U', 'Tania', 'Trentini', 334889900, 'Via Bari', 102, 'manager', '2020-05-09', 28, 2, false, 'vwx56'),
 ('2023-02-01 16:30:00', 'BSCLNZ89I12M082P', 'Lorenzo', 'Boschi', 388667788, 'Via Palermo', 88, 'volontario', '2023-05-10', 20, 3, false, 'yza78'),
-('2021-04-17 09:50:00', 'MRTGLD90L01Z404N', 'Gilda', 'Moretti', 350112233, 'Via Genova', 6, 'tecnico', '2022-02-20', 43, 1, false, 'bcd90');
+('2021-04-17 09:50:00', 'MRTGLD90L01Z404N', 'Gilda', 'Moretti', 350112233, 'Via Genova', 6, 'tecnico', '2022-02-20', 43, 1, false, 'bcd90'),
+('2023-09-18 09:30:00', 'BNCLGU85C15H501Z', 'Luigi', 'Bianchi', 349998877, 'Via Garibaldi', 25, 'tecnico', '2024-02-01', 1, 3, false, 'abc12');
 
 INSERT INTO SPESA (codice_contrattuale, data, costo, indirizzo___via, indirizzo___nuemro_civico, codice_lavoro, CF) VALUES
 (7001, '2025-06-05 10:30:00', 180.00, 'Via Milano', 45, 1, 'BNCLDA90B12F205Y'),
@@ -1569,8 +1570,8 @@ INSERT INTO OCCUPAZIONE (codice_tipologia_contratto, CF, inizio_validita, fine_v
 (1, 'GLLFNC76G14L219S', '2021-01-20', NULL),                         -- indeterminato
 (22, 'TRNTNI85H20F205U', '2020-05-09', '2022-05-09'),                -- 2 anni passati
 (21, 'BSCLNZ89I12M082P', '2023-05-10', '2023-11-10'),                -- collaborazione occasionale (6 mesi)
-(1, 'MRTGLD90L01Z404N', '2022-02-20', NULL);                         -- indeterminato
-
+(1, 'MRTGLD90L01Z404N', '2022-02-20', NULL),                         -- indeterminato
+(1, 'BNCLGU85C15H501Z', '2023-01-15', NULL);
 
 INSERT INTO OCCUPAZIONE_PASSATA (codice_lavoro, inizio_lavoro, CF, fine_lavoro) VALUES
 -- Maria Rossi - tecnico, ora in Comunicazione Digitale (1)
