@@ -18,7 +18,7 @@ def _shutdown_connection():
     session.close()
 
 
-def _query_with_input(query_text, params):
+def _query_with_input(query_text, params) -> list[dict[str, str]]:
     if not isinstance(params, dict):
         params = {"id": params}
     result = session.execute(query_text, params)
@@ -26,19 +26,39 @@ def _query_with_input(query_text, params):
     return rows
 
 
-def get_userinfo_from_company_code(company_code):
+def get_userinfo_from_company_code(company_code) -> tuple[None, None] | tuple[str, str]:
     query = text(
         """
-            SELECT p.password_applicativo, p.amministratore_sistema
-            FROM PERSONALE p
-            WHERE p.codice_aziendale = :id
+            SELECT password_applicativo, codice_lavoro
+            FROM PERSONALE
+            WHERE codice_aziendale = :id
         """
     )
     results = _query_with_input(query, {"id": company_code})
-    if results:
-        return results[0]
-    else:
-        return None
+    if not results:
+        return None, None
+
+    if len(results) > 1:
+        raise ValueError(
+            "Il codice aziendale non è univoco."
+        )
+    result = results[0]
+    password, company_code = result.values()
+    query = text(
+        """
+        SELECT tipo_gruppo
+        FROM GRUPPO_DI_LAVORO
+        WHERE codice_lavoro = :id
+        """
+    )
+    results = _query_with_input(query, {"id": company_code})
+    if len(results) != 1:
+        raise ValueError(
+            "Il codice aziendale non è univoco."
+        )
+    group_type = results[0]["tipo_gruppo"]
+    print(group_type)
+    return group_type, password
 
 
 def get_rooms_from_building_code(building_code):

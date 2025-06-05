@@ -30,6 +30,11 @@ class Gui:
     def show_company_code_not_found(self):
         messagebox.showerror(self.ERROR_TITLE, "Codice azienda non valido")
 
+    def show_not_associated_with_group(self):
+        messagebox.showerror(
+            self.ERROR_TITLE, "Il codice aziendale non è associato a nessun gruppo di lavoro"
+        )
+
     def show_login_screen(self):
         self._destroy_view()
         self._build_login_screen(self._login_action)

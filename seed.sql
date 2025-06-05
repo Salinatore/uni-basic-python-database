@@ -514,7 +514,7 @@ INSERT INTO IMMOBILE (numero_immobile, numero_telefono, indirizzo___via, indiriz
 (3, '0328896602', 'Via Oreste', 39);
 
 INSERT INTO GRUPPO_DI_LAVORO (data_inizio_lavoro, descrizione, tipo_gruppo, data_fine_lavoro) VALUES
-('2025-06-01 09:00:00', 'Gruppo Comunicazione Digitale', 'prodotto', '2025-09-01 18:00:00'),
+('2025-06-01 09:00:00', 'Gruppo Comunicazione Digitale', 'admin', '2025-09-01 18:00:00'),
 ('2025-06-01 09:00:00', 'Gruppo Visual Design', 'prodotto', '2025-09-01 18:00:00'),
 ('2025-06-01 09:00:00', 'Gruppo Contenuti Editoriali', 'prodotto', '2025-09-01 18:00:00'),
 ('2025-06-01 09:00:00', 'Gruppo Podcast & Audio', 'prodotto', '2025-09-01 18:00:00'),

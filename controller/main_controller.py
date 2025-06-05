@@ -2,6 +2,7 @@ from model import db
 from view.gui import Gui
 from model.operation_user import USER_OPERATIONS
 
+ADMIN_CODE = "admin"
 
 class Controller:
     def __init__(self):
@@ -16,15 +17,18 @@ class Controller:
             self._gui.show_company_code_not_found()
             return
 
-        db_password = db_response.get("password_applicativo")
-        user_type = db_response.get("amministratore_sistema")
+        group_type, db_password = db_response
 
         if db_password != password:
             self._gui.show_invalid_password()
             return
 
-        if user_type == 0:
+        if not group_type:
+            self._gui.show_not_associated_with_group()
+            return
+
+        if group_type.lower() == ADMIN_CODE:
+            self._gui.show_admin_screen(USER_OPERATIONS)
+        else:
             non_admin_operations = [op for op in USER_OPERATIONS if not op.admin_only]
             self._gui.show_worker_screen(non_admin_operations)
-        else:
-            self._gui.show_admin_screen(USER_OPERATIONS)
