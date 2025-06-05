@@ -1655,7 +1655,7 @@ INSERT INTO CONTIENE (Div_numero_immobile, Div_numero, numero, codice_materiale,
 
 
 INSERT INTO TURNO_di_LAVORO (data_inizio, data_fine, descrizione, cancellato, Div_numero_immobile, Div_numero, numero, codice_lavoro) VALUES
-('2025-06-01 09:00:00', '2025-06-01 13:00:00', 'Turno mattina Gruppo Comunicazione Digitale', 'N', 1, 1, 101, 1),
+('2025-06-01 09:00:00', '2025-06-03 09:00:00', 'Turno mattina Gruppo Comunicazione Digitale', 'N', 1, 1, 101, 1),
 ('2025-06-01 14:00:00', '2025-06-01 18:00:00', 'Turno pomeriggio Gruppo Comunicazione Digitale', 'N', 1, 1, 101, 1),
 ('2025-06-02 09:00:00', '2025-06-02 13:00:00', 'Turno mattina Gruppo Visual Design', 'N', 1, 1, 102, 2),
 ('2025-06-02 14:00:00', '2025-06-02 18:00:00', 'Turno pomeriggio Gruppo Visual Design', 'N', 1, 1, 102, 2),
@@ -1676,7 +1676,6 @@ INSERT INTO TURNO_di_LAVORO (data_inizio, data_fine, descrizione, cancellato, Di
 
 INSERT INTO partecipanti_turno (CF, data_inizio, codice_lavoro) VALUES
 ('RSSMRA80A01F205X', '2025-06-01 09:00:00', 1),
-('RSSMRA80A01F205X', '2025-06-01 14:00:00', 1),
 ('VRDLGU85B15C351Y', '2025-06-03 09:00:00', 3),
 ('VRDLGU85B15C351Y', '2025-06-03 14:00:00', 3),
 ('BNCLRA90C30H501Z', '2025-06-02 09:00:00', 2),
