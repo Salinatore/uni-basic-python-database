@@ -33,13 +33,13 @@ class Operation:
 USER_OPERATIONS = [
     Operation(
         "Visualizzare tutte le stanze contenute in un immobile",
-        True,
+        False,
         ["codice immobile"],
         get_rooms_from_building_code,
     ),
     Operation(
         "Visualizzazione dei materiali utilizzati per un determinato abito",
-        True,
+        False,
         ["codice abito"],
         get_materials_from_dress_code,
     ),
@@ -63,7 +63,7 @@ USER_OPERATIONS = [
     ),
     Operation(
         "Visualizzazione dei gruppi di lavoro che hanno occupato un ufficio",
-        False,
+        True,
         ["numero stanza"],
         get_work_groups_from_room_number,
     ),
@@ -115,7 +115,7 @@ USER_OPERATIONS = [
     ),
     Operation(
         "Visualizzazione delle ore fatte da un dipendente nel suo attuale gruppo di lavoro",
-        False,
+        True,
         ["CF dipendente"],
         get_total_hours_worked_by_employee,
     ),
@@ -127,7 +127,7 @@ USER_OPERATIONS = [
     ),
     Operation(
         "Cambio gruppo per un dipendente specializzato",
-        False,
+        True,
         ["CF dipendente", "nuovo codice lavoro"],
         change_employee_work_group,
     ),
