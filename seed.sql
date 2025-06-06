@@ -1441,27 +1441,27 @@ INSERT INTO STANZA (Div_numero_immobile, Div_numero, numero, partecipanti_massim
 (3, 3, 301, 50, 'Auditorium', 50, 10);
 
 INSERT INTO composto (codice_materiale, codice_abito, quantita_usata) VALUES
-(13, 1, 5),   -- Tela
-(14, 1, 3),   -- Cotone
-(58, 1, 2),   -- Tessuto di poliestere
-(24, 8, 4),   -- Tessuto sintetico
-(20, 8, 2),   -- Poliuretano
-(22, 8, 1),   -- Fibra di vetro
-(14, 9, 6),   -- Cotone
-(30, 9, 3),   -- Tessuto di lino   -- Tessuto di seta
-(44, 7, 7),   -- Pelle
-(46, 7, 2),   -- Fibra naturale
-(24, 5, 6),   -- Tessuto sintetico
-(14, 5, 4),   -- Cotone
-(14, 2, 4),   -- Cotone
-(24, 2, 3),   -- Tessuto sintetico
-(21, 2, 2),   -- Nylon   -- Tessuto di lino   -- Cotone
-(53, 9, 1),   -- Tessuto di seta
-(24, 13, 6),  -- Tessuto sintetico
-(21, 13, 3),  -- Nylon
-(20, 13, 2),  -- Poliuretano
-(45, 17, 4),  -- Lana merino
-(53, 17, 2),  -- Tessuto di seta
+(13, 1, 5),
+(14, 1, 3),
+(58, 1, 2),
+(24, 8, 4),
+(20, 8, 2),
+(22, 8, 1),
+(14, 9, 6),
+(30, 9, 3),
+(44, 7, 7),
+(46, 7, 2),
+(24, 5, 6),
+(14, 5, 4),
+(14, 2, 4),
+(24, 2, 3),
+(21, 2, 2),
+(53, 9, 1),
+(24, 13, 6),
+(21, 13, 3),
+(20, 13, 2),
+(45, 17, 4),
+(53, 17, 2),
 (39, 17, 1);
 
 INSERT INTO relativo (codice_contrattuale, codice_materiale, quantita) VALUES
