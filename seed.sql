@@ -280,11 +280,6 @@ alter table partecipazione add constraint REF_parte_EVENT_FK
      foreign key (codice_evento)
      references EVENTO (codice_evento);
 
--- Not implemented
--- alter table PERSONALE add constraint ID_PERSONALE_CHK
---     check(exists(select * from OCCUPAZIONE
---                  where OCCUPAZIONE.CF = CF));
-
 alter table PERSONALE add constraint REF_PERSO_GRUPP_FK
      foreign key (codice_lavoro)
      references GRUPPO_DI_LAVORO (codice_lavoro);
@@ -507,7 +502,9 @@ create index REF_TURNO_STANZ_IND
 create index REF_TURNO_GRUPP_IND
      on TURNO_di_LAVORO (codice_lavoro);
 
-use brand_di_moda;
+-- Data Section --
+-- ____________ --
+
 INSERT INTO IMMOBILE (numero_immobile, numero_telefono, indirizzo___via, indirizzo___nuemro_civico) VALUES
 (1, '0312458440', 'Strada Benedetta', 162),
 (2, '0314927555', 'Via Pellegrino', 80),
@@ -1432,7 +1429,7 @@ INSERT INTO EVENTO (nome, data_inizio_evento, data_fine_evento, descrizione, par
 ('Formazione Social Media', '2025-08-05 09:00:00', '2025-08-05 17:00:00', 'Corso di formazione su social media marketing', 90, 1, 10, 'Workshop');
 
 INSERT INTO STANZA (Div_numero_immobile, Div_numero, numero, partecipanti_massimi, tipo_stanza, capienza, codice_lavoro) VALUES
-(1, 1, 101, 20, 'Ufficio', 20, 1),   -- immobile 1, piano 1, stanza 101, gruppo 1
+(1, 1, 101, 20, 'Ufficio', 20, 1),
 (1, 1, 102, 15, 'Meeting', 15, 2),
 (1, 2, 201, 30, 'Sala', 30, 3),
 (1, 2, 202, 25, 'Ufficio', 25, 4),
@@ -1465,17 +1462,17 @@ INSERT INTO composto (codice_materiale, codice_abito, quantita_usata) VALUES
 (20, 13, 2),  -- Poliuretano
 (45, 17, 4),  -- Lana merino
 (53, 17, 2),  -- Tessuto di seta
-(39, 17, 1);  -- Vell
+(39, 17, 1);
 
 INSERT INTO relativo (codice_contrattuale, codice_materiale, quantita) VALUES
-(7001, 14, 3),  -- Cotone (per abbigliamento semplice)
-(7001, 23, 2),  -- Tessuto sintetico
-(7002, 53, 1),  -- Tessuto di seta (più pregiato, meno quantità)
-(7002, 29, 2),  -- Tessuto di lino
-(7003, 19, 2),  -- Acciaio inox
-(7003, 20, 1),  -- Poliuretano
-(7004, 21, 3),  -- Nylon (tecnico)
-(7004, 24, 2);  -- Tessuto sintetico
+(7001, 14, 3),
+(7001, 23, 2),
+(7002, 53, 1),
+(7002, 29, 2),
+(7003, 19, 2),
+(7003, 20, 1),
+(7004, 21, 3),
+(7004, 24, 2);
 
 
 INSERT INTO partecipazione (codice_evento, CF, costo) VALUES
@@ -1561,49 +1558,30 @@ INSERT INTO sottoscrive_spesa_evento (codice_contrattuale, codice_evento) VALUES
 
 
 INSERT INTO OCCUPAZIONE (codice_tipologia_contratto, CF, inizio_validita, fine_validita) VALUES
-(1, 'RSSMRA80A01F205X', '2023-01-15', NULL),                          -- indeterminato
-(10, 'VRDLGU85B15C351Y', '2023-02-10', '2023-08-10'),                -- stage curriculare (6 mesi)
-(22, 'BNCLRA90C30H501Z', '2023-03-01', NULL),                        -- indeterminato con incentivi
-(1, 'PLZZNT75D22L219Q', '2022-09-18', NULL),                         -- indeterminato
-(21, 'FRNCST88E18A794W', '2023-04-03', '2023-10-03'),                -- collaborazione occasionale (6 mesi)
-(22, 'LMBRTI95F05Z404M', '2022-10-01', '2024-10-01'),                -- 2 anni
-(1, 'GLLFNC76G14L219S', '2021-01-20', NULL),                         -- indeterminato
-(22, 'TRNTNI85H20F205U', '2020-05-09', '2022-05-09'),                -- 2 anni passati
-(21, 'BSCLNZ89I12M082P', '2023-05-10', '2023-11-10'),                -- collaborazione occasionale (6 mesi)
-(1, 'MRTGLD90L01Z404N', '2022-02-20', NULL),                         -- indeterminato
+(1, 'RSSMRA80A01F205X', '2023-01-15', NULL),
+(10, 'VRDLGU85B15C351Y', '2023-02-10', '2023-08-10'),
+(22, 'BNCLRA90C30H501Z', '2023-03-01', NULL),
+(1, 'PLZZNT75D22L219Q', '2022-09-18', NULL),
+(21, 'FRNCST88E18A794W', '2023-04-03', '2023-10-03'),
+(22, 'LMBRTI95F05Z404M', '2022-10-01', '2024-10-01'),
+(1, 'GLLFNC76G14L219S', '2021-01-20', NULL),
+(22, 'TRNTNI85H20F205U', '2020-05-09', '2022-05-09'),
+(21, 'BSCLNZ89I12M082P', '2023-05-10', '2023-11-10'),
+(1, 'MRTGLD90L01Z404N', '2022-02-20', NULL),
 (1, 'BNCLGU85C15H501Z', '2023-01-15', NULL);
 
 INSERT INTO OCCUPAZIONE_PASSATA (codice_lavoro, inizio_lavoro, CF, fine_lavoro) VALUES
--- Maria Rossi - tecnico, ora in Comunicazione Digitale (1)
-(10, '2022-03-01 09:00:00', 'RSSMRA80A01F205X', '2023-01-10 18:00:00'), -- Data Analysis
-
--- Luigi Verdi - volontario, ora in Logistica Evento (30)
-(27, '2020-09-01 10:00:00', 'VRDLGU85B15C351Y', '2021-06-01 18:00:00'), -- Accoglienza Evento
-(20, '2021-07-01 10:00:00', 'VRDLGU85B15C351Y', '2022-12-15 18:00:00'), -- Merchandising
-
--- Chiara Bianchi - manager, ora in Ricerca & Innovazione (15)
-(14, '2021-03-01 09:00:00', 'BNCLRA90C30H501Z', '2023-02-28 17:00:00'), -- Formazione & Didattica
-
--- Antonio Palazzi - tecnico, ora in Registrazioni & Accrediti Evento (40)
-(42, '2019-06-01 08:00:00', 'PLZZNT75D22L219Q', '2022-08-30 17:00:00'), -- Scenografia & Allestimenti Evento
-
--- Stefano Franchi - volontario, ora in Video Produzione (5)
-(30, '2020-02-15 10:00:00', 'FRNCST88E18A794W', '2022-10-15 18:00:00'), -- Logistica Evento
-
--- Giulia Lamberti - manager, ora in Coordinamento Palco Evento (46)
-(3,  '2021-01-15 09:00:00', 'LMBRTI95F05Z404M', '2022-09-15 18:00:00'), -- Contenuti Editoriali
-
--- Francesca Gallo - tecnico, ora in Data Analysis (10)
-(43, '2020-02-01 08:30:00', 'GLLFNC76G14L219S', '2020-12-31 17:30:00'), -- Scenografia & Allestimenti Evento
-
--- Tania Trentini - manager, ora in Accoglienza Evento (28)
-(15, '2018-04-01 09:00:00', 'TRNTNI85H20F205U', '2020-04-01 18:00:00'), -- Ricerca & Innovazione
-
--- Lorenzo Boschi - volontario, ora in Merchandising (20)
-(27, '2022-01-10 10:00:00', 'BSCLNZ89I12M082P', '2023-01-10 17:00:00'), -- Accoglienza Evento
-
--- Gilda Moretti - tecnico, ora in Scenografia & Allestimenti Evento (43)
-(1,  '2020-01-01 08:30:00', 'MRTGLD90L01Z404N', '2022-01-31 17:00:00'); -- Comunicazione Digitale
+(10, '2022-03-01 09:00:00', 'RSSMRA80A01F205X', '2023-01-10 18:00:00'),
+(27, '2020-09-01 10:00:00', 'VRDLGU85B15C351Y', '2021-06-01 18:00:00'),
+(20, '2021-07-01 10:00:00', 'VRDLGU85B15C351Y', '2022-12-15 18:00:00'),
+(14, '2021-03-01 09:00:00', 'BNCLRA90C30H501Z', '2023-02-28 17:00:00'),
+(42, '2019-06-01 08:00:00', 'PLZZNT75D22L219Q', '2022-08-30 17:00:00'),
+(30, '2020-02-15 10:00:00', 'FRNCST88E18A794W', '2022-10-15 18:00:00'),
+(3,  '2021-01-15 09:00:00', 'LMBRTI95F05Z404M', '2022-09-15 18:00:00'),
+(43, '2020-02-01 08:30:00', 'GLLFNC76G14L219S', '2020-12-31 17:30:00'),
+(15, '2018-04-01 09:00:00', 'TRNTNI85H20F205U', '2020-04-01 18:00:00'),
+(27, '2022-01-10 10:00:00', 'BSCLNZ89I12M082P', '2023-01-10 17:00:00'),
+(1,  '2020-01-01 08:30:00', 'MRTGLD90L01Z404N', '2022-01-31 17:00:00');
 
 
 INSERT INTO tariffa (nome, CF, prezzo) VALUES
@@ -1619,39 +1597,26 @@ INSERT INTO tariffa (nome, CF, prezzo) VALUES
 ('Concerto', 'ZNCFLR86K05K714R', 210);
 
 INSERT INTO CONTIENE (Div_numero_immobile, Div_numero, numero, codice_materiale, quantita) VALUES
--- Immbile 1, piano 1, stanza 101 (Ufficio)
-(1, 1, 101, 2, 50),    -- Legno
-(1, 1, 101, 3, 30),    -- Vetro
-(1, 1, 101, 4, 20),    -- Plastica
-
--- Immbile 1, piano 1, stanza 102 (Meeting)
-(1, 1, 102, 2, 100),   -- Legno
-(1, 1, 102, 3, 60),    -- Vetro
-(1, 1, 102, 8, 40),    -- Cemento
-
--- Immbile 1, piano 2, stanza 201 (Sala)
-(1, 2, 201, 8, 200),   -- Cemento
-(1, 2, 201, 1, 100),   -- Acciaio
-(1, 2, 201, 11, 70),   -- Carta
-
--- Immbile 1, piano 2, stanza 202 (Ufficio)
-(1, 2, 202, 2, 60),    -- Legno
-(1, 2, 202, 4, 30),    -- Plastica
-
--- Immbile 2, piano 1, stanza 101 (Sala)
-(2, 1, 101, 1, 150),   -- Acciaio
-(2, 1, 101, 8, 90),    -- Cemento
-(2, 1, 101, 3, 80),    -- Vetro
-
--- Immbile 2, piano 1, stanza 102 (Meeting)
-(2, 1, 102, 2, 70),    -- Legno
-(2, 1, 102, 11, 40),   -- Carta
-
--- Immbile 3, piano 3, stanza 301 (Auditorium)
-(3, 3, 301, 1, 300),   -- Acciaio
-(3, 3, 301, 8, 250),   -- Cemento
-(3, 3, 301, 5, 150),   -- Alluminio
-(3, 3, 301, 3, 120);   -- Vetro
+(1, 1, 101, 2, 50),
+(1, 1, 101, 3, 30),
+(1, 1, 101, 4, 20),
+(1, 1, 102, 2, 100),
+(1, 1, 102, 3, 60),
+(1, 1, 102, 8, 40),
+(1, 2, 201, 8, 200),
+(1, 2, 201, 1, 100),
+(1, 2, 201, 11, 70),
+(1, 2, 202, 2, 60),
+(1, 2, 202, 4, 30),
+(2, 1, 101, 1, 150),
+(2, 1, 101, 8, 90),
+(2, 1, 101, 3, 80),
+(2, 1, 102, 2, 70),
+(2, 1, 102, 11, 40),
+(3, 3, 301, 1, 300),
+(3, 3, 301, 8, 250),
+(3, 3, 301, 5, 150),
+(3, 3, 301, 3, 120);
 
 
 INSERT INTO TURNO_di_LAVORO (data_inizio, data_fine, descrizione, cancellato, Div_numero_immobile, Div_numero, numero, codice_lavoro) VALUES
@@ -1688,13 +1653,13 @@ INSERT INTO partecipanti_turno (CF, data_inizio, codice_lavoro) VALUES
 INSERT INTO TURNO_della_MODELLA_nella_SFILATA (
     codice_evento, codice_entrata_sfilata, codice_abito, codice_contrattuale
 ) VALUES
-(1, 1, 1, 7001),   -- evento 1 (codice_lavoro 1), spesa 7001 (codice_lavoro 1), abito 1 (codice_lavoro 1)
-(2, 2, 5, 7002),   -- evento 2 (codice_lavoro 2), spesa 7002 (codice_lavoro 2), abito 5 (codice_lavoro 2)
-(3, 3, 9, 7003),   -- evento 3 (codice_lavoro 3), spesa 7003 (codice_lavoro 3), abito 9 (codice_lavoro 3)
-(4, 4, 13, 7004),  -- evento 4 (codice_lavoro 4), spesa 7004 (codice_lavoro 4), abito 13 (codice_lavoro 4)
-(5, 5, 17, 7005),  -- evento 5 (codice_lavoro 5), spesa 7005 (codice_lavoro 5), abito 17 (codice_lavoro 5)
-(6, 6, 21, 7006),  -- evento 6 (codice_lavoro 6), spesa 7006 (codice_lavoro 6), abito 21 (codice_lavoro 6)
-(7, 7, 25, 7007),  -- evento 7 (codice_lavoro 7), spesa 7007 (codice_lavoro 7), abito 25 (codice_lavoro 7)
-(8, 8, 29, 7008),  -- evento 8 (codice_lavoro 8), spesa 7008 (codice_lavoro 8), abito 29 (codice_lavoro 8)
-(9, 9, 33, 7009),  -- evento 9 (codice_lavoro 9), spesa 7009 (codice_lavoro 9), abito 33 (codice_lavoro 9)
-(10, 10, 37, 7001); -- evento 10 (codice_lavoro 10), forzato con spesa 7001 solo come esempio (⚠️ codice_lavoro mismatch)
+(1, 1, 1, 7001),
+(2, 2, 5, 7002),
+(3, 3, 9, 7003),
+(4, 4, 13, 7004),
+(5, 5, 17, 7005),
+(6, 6, 21, 7006),
+(7, 7, 25, 7007),
+(8, 8, 29, 7008),
+(9, 9, 33, 7009),
+(10, 10, 37, 7001);
