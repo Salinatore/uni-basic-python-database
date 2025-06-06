@@ -183,7 +183,7 @@ def get_dresses_from_event_code(event_code):
 
 
 def insert_work_shift(
-    new_start, new_end, building_code, floor_code, room_code, codice_lavoro
+    new_start, new_end, building_code, floor_code, room_code, codice_lavoro, description
 ):
     query = text(
         """
@@ -200,7 +200,7 @@ def insert_work_shift(
             VALUES (
                 :new_start, 
                 :new_end, 
-                'Cucire', 
+                :description, 
                 '0', 
                 :building_code, 
                 :floor_code, 
@@ -218,6 +218,7 @@ def insert_work_shift(
             "floor_code": floor_code,
             "room_code": room_code,
             "codice_lavoro": codice_lavoro,
+            "description": description,
         },
     )
     session.commit()

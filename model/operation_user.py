@@ -95,6 +95,7 @@ USER_OPERATIONS = [
             "codice piano",
             "codice stanza",
             "codice lavoro",
+            "descrizione",
         ],
         insert_work_shift,
     ),
