@@ -1626,16 +1626,12 @@ INSERT INTO TURNO_di_LAVORO (data_inizio, data_fine, descrizione, cancellato, Di
 ('2025-06-02 14:00:00', '2025-06-02 18:00:00', 'Turno pomeriggio Gruppo Visual Design', '0', 1, 1, 102, 2),
 ('2025-06-03 09:00:00', '2025-06-03 13:00:00', 'Turno mattina Gruppo Contenuti Editoriali', '0', 1, 2, 201, 3),
 ('2025-06-03 14:00:00', '2025-06-03 18:00:00', 'Turno pomeriggio Gruppo Contenuti Editoriali', '0', 1, 2, 201, 3),
-
 ('2025-06-04 09:00:00', '2025-06-04 13:00:00', 'Turno mattina Gruppo Podcast & Audio', '0', 1, 2, 202, 4),
 ('2025-06-04 14:00:00', '2025-06-04 18:00:00', 'Turno pomeriggio Gruppo Podcast & Audio', '0', 1, 2, 202, 4),
-
 ('2025-06-05 09:00:00', '2025-06-05 13:00:00', 'Turno mattina Gruppo Video Produzione', '0', 1, 3, 301, 5),
 ('2025-06-05 14:00:00', '2025-06-05 18:00:00', 'Turno pomeriggio Gruppo Video Produzione', '0', 1, 3, 301, 5),
-
 ('2025-06-06 09:00:00', '2025-06-06 13:00:00', 'Turno mattina Gruppo Sala Immobile 2', '0', 2, 1, 101, 6),
 ('2025-06-06 14:00:00', '2025-06-06 18:00:00', 'Turno pomeriggio Gruppo Sala Immobile 2', '0', 2, 1, 101, 6),
-
 ('2025-06-07 09:00:00', '2025-06-07 13:00:00', 'Turno mattina Gruppo Meeting Immobile 2', '0', 2, 1, 102, 7),
 ('2025-06-07 14:00:00', '2025-06-07 18:00:00', 'Turno pomeriggio Gruppo Meeting Immobile 2', '0', 2, 1, 102, 7);
 
