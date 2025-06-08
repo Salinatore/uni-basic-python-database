@@ -27,6 +27,10 @@ def _query_with_input(query_text, params) -> list[dict[str, str]]:
 
 
 def get_userinfo_from_company_code(company_code) -> tuple[None, None] | tuple[str, str]:
+    try:
+        company_code = int(company_code)
+    except ValueError:
+        return None, None
     query = text(
         """
             SELECT password_applicativo, codice_lavoro
@@ -57,7 +61,6 @@ def get_userinfo_from_company_code(company_code) -> tuple[None, None] | tuple[st
             "Il codice aziendale non è univoco."
         )
     group_type = results[0]["tipo_gruppo"]
-    print(group_type)
     return group_type, password
 
 
