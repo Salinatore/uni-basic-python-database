@@ -1,4 +1,6 @@
-from sqlalchemy import create_engine, MetaData, text
+from typing import Any
+
+from sqlalchemy import create_engine, MetaData, text, Result, CursorResult
 from sqlalchemy.orm import sessionmaker
 from model.config import DATABASE_URL
 import atexit
@@ -17,13 +19,15 @@ metadata.reflect(bind=engine)
 def _shutdown_connection():
     session.close()
 
+def compress_to_dict_list(query_results: Result[Any]) -> list[dict[str, Any]]:
+    return [dict(row) for row in query_results.mappings()]
 
-def _query_with_input(query_text, params) -> list[dict[str, str]]:
+
+def _query_with_input(query_text, params, default_key: str = "id") -> list[dict[str, Any]]:
     if not isinstance(params, dict):
-        params = {"id": params}
-    result = session.execute(query_text, params)
-    rows = [dict(row) for row in result.mappings()]
-    return rows
+        params = {default_key: params}
+    results: Result = session.execute(query_text, params)
+    return compress_to_dict_list(results)
 
 
 def get_userinfo_from_company_code(company_code) -> tuple[None, None] | tuple[str, str]:
@@ -64,7 +68,7 @@ def get_userinfo_from_company_code(company_code) -> tuple[None, None] | tuple[st
     return group_type, password
 
 
-def get_rooms_from_building_code(building_code):
+def get_rooms_from_building_code(building_code) -> list[dict[str, str]]:
     query = text(
         """
             SELECT Div_numero_immobile AS numero_immobile, Div_numero AS numero_piano, numero AS numero_stanza, partecipanti_massimi, tipo_stanza, capienza, codice_lavoro AS codice_gruppo_lavoro
@@ -75,7 +79,7 @@ def get_rooms_from_building_code(building_code):
     return _query_with_input(query, {"id": building_code})
 
 
-def get_materials_from_dress_code(dress_code):
+def get_materials_from_dress_code(dress_code) -> list[dict[str, str]]:
     query = text(
         """
             SELECT m.*, c.quantita_usata
@@ -88,7 +92,7 @@ def get_materials_from_dress_code(dress_code):
     return _query_with_input(query, {"id": dress_code})
 
 
-def insert_work_group(start_work_date, description, group_type):
+def insert_work_group(start_work_date, description, group_type) -> None:
     query = text(
         """
             INSERT INTO GRUPPO_DI_LAVORO (data_inizio_lavoro, data_fine_lavoro, descrizione, tipo_gruppo)
@@ -106,7 +110,7 @@ def insert_work_group(start_work_date, description, group_type):
     session.commit()
 
 
-def get_dresses_from_model_code(model_code):
+def get_dresses_from_model_code(model_code) -> list[dict[str, str]]:
     query = text(
         """
             SELECT a.* 
@@ -119,7 +123,7 @@ def get_dresses_from_model_code(model_code):
     return _query_with_input(query, {"id": model_code})
 
 
-def insert_participation(event_code, person_cf, cost):
+def insert_participation(event_code, person_cf, cost) -> None:
     query = text(
         """
             INSERT INTO partecipazione (codice_evento, CF, costo)
@@ -132,7 +136,7 @@ def insert_participation(event_code, person_cf, cost):
     session.commit()
 
 
-def get_work_groups_from_room_number(room_number):
+def get_work_groups_from_room_number(room_number) -> list[dict[str, str]]:
     query = text(
         """
             SELECT t.codice_lavoro 
@@ -146,7 +150,7 @@ def get_work_groups_from_room_number(room_number):
     return _query_with_input(query, {"id": room_number})
 
 
-def get_max_paid_model_contract():
+def get_max_paid_model_contract() -> list[dict[str, str]]:
     query = text(
         """
             SELECT MAX(s.costo) AS contratto_modella_massimo
@@ -154,11 +158,11 @@ def get_max_paid_model_contract():
             WHERE s.CF IS NOT NULL;
         """
     )
-    result = session.execute(query).scalar()
-    return result
+    result = session.execute(query)
+    return compress_to_dict_list(result)
 
 
-def get_event_with_most_participants():
+def get_event_with_most_participants() -> list[dict[str, str]]:
     query = text(
         """
             SELECT e.codice_evento
@@ -169,11 +173,11 @@ def get_event_with_most_participants():
             );
         """
     )
-    results = session.execute(query).scalars().all()
-    return results
+    results = session.execute(query)
+    return compress_to_dict_list(results)
 
 
-def get_dresses_from_event_code(event_code):
+def get_dresses_from_event_code(event_code) -> list[dict[str, str]]:
     query = text(
         """
             SELECT a.*
@@ -185,9 +189,7 @@ def get_dresses_from_event_code(event_code):
     return _query_with_input(query, {"id": event_code})
 
 
-def insert_work_shift(
-    new_start, new_end, building_code, floor_code, room_code, codice_lavoro, description
-):
+def insert_work_shift(new_start, new_end, building_code, floor_code, room_code, codice_lavoro, description) -> None:
     query = text(
         """
             INSERT INTO TURNO_di_LAVORO (
@@ -227,37 +229,29 @@ def insert_work_shift(
     session.commit()
 
 
-def insert_new_expense(
-    id_spesa,
-    data_ora,
-    costo,
-    cf=None,
-    codice_contrattuale=None,
-    codice_materiale=None,
-    altro_campo=None,
-):
+def insert_new_expense(contract_code, date, cost, address_street=None, address_street_number=None, job_code=None, fiscal_code=None) -> None:
     query = text(
         """
-            INSERT INTO SPESE
-            VALUES (:id_spesa, :data_ora, :costo, :cf, :altro_campo1, :codice_materiale, :altro_campo2);
+            INSERT INTO SPESE(codice_contrattuale, data, costo, indirizzo___via, indirizzo___nuemro_civico, codice_lavoro, CF) 
+            VALUES (:contract_code, :date, :cost, :address_street, :address_street_number, :job_code, :CF);
         """
     )
     session.execute(
         query,
         {
-            "id_spesa": id_spesa,
-            "data_ora": data_ora,
-            "costo": costo,
-            "cf": cf,
-            "altro_campo1": altro_campo,
-            "codice_materiale": codice_materiale,
-            "altro_campo2": None,
+            "contract_code": contract_code,
+            "date": date,
+            "cost": cost,
+            "address_street": address_street,
+            "address_street_number": address_street_number,
+            "job_code": job_code,
+            "CF": fiscal_code,
         },
     )
     session.commit()
 
 
-def get_total_hours_worked_by_employee(cf):
+def get_total_hours_worked_by_employee(cf) -> list[dict[str, str]]:
     query = text(
         """
             SELECT SUM(TIMESTAMPDIFF(HOUR, t.data_inizio, t.data_fine)) AS numero_ore
@@ -267,11 +261,14 @@ def get_total_hours_worked_by_employee(cf):
             WHERE p.CF = :cf;
         """
     )
-    result = session.execute(query, {"cf": cf}).scalar()
-    return result
+    result = session.execute(query, {"cf": cf})
+    result_list =  compress_to_dict_list(result)
+    if result_list and len(result_list) > 1:
+        raise "Errore: più di un risultato trovato per il CF specificato."
+    return result_list if result_list else [{"numero_ore": 0}]
 
 
-def get_highest_paid_work_group():
+def get_highest_paid_work_group() -> list[dict[str, str]]:
     query = text(
         """
         WITH stipendi AS (
@@ -289,11 +286,11 @@ def get_highest_paid_work_group():
         WHERE totale_stipendio = (SELECT MAX(totale_stipendio) FROM stipendi);
         """
     )
-    results = session.execute(query).mappings().all()
-    return results
+    results = session.execute(query)
+    return compress_to_dict_list(results)
 
 
-def change_employee_work_group(cf, new_codice_lavoro):
+def change_employee_work_group(cf, new_codice_lavoro) -> None:
     previews_work_code_query = text(
         """
             SELECT codice_lavoro, occupazione_presente_inizio
