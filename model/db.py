@@ -1,6 +1,6 @@
 from typing import Any
 
-from sqlalchemy import create_engine, MetaData, text, Result, CursorResult
+from sqlalchemy import create_engine, MetaData, text, Result
 from sqlalchemy.orm import sessionmaker
 from model.config import DATABASE_URL
 import atexit
@@ -19,18 +19,23 @@ metadata.reflect(bind=engine)
 def _shutdown_connection():
     session.close()
 
+
 def compress_to_dict_list(query_results: Result[Any]) -> list[dict[str, Any]]:
     return [dict(row) for row in query_results.mappings()]
 
 
-def _query_with_input(query_text, params, default_key: str = "id") -> list[dict[str, Any]]:
+def _query_with_input(
+    query_text, params, default_key: str = "id"
+) -> list[dict[str, Any]]:
     if not isinstance(params, dict):
         params = {default_key: params}
     results: Result = session.execute(query_text, params)
     return compress_to_dict_list(results)
 
 
-def get_userinfo_from_company_code(company_code) -> tuple[None, None] | tuple[str, str]:
+def get_userinfo_from_company_code(
+    company_code,
+) -> tuple[None, None] | tuple[str, str]:
     try:
         company_code = int(company_code)
     except ValueError:
@@ -47,9 +52,7 @@ def get_userinfo_from_company_code(company_code) -> tuple[None, None] | tuple[st
         return None, None
 
     if len(results) > 1:
-        raise ValueError(
-            "Il codice aziendale non è univoco."
-        )
+        raise ValueError("Il codice aziendale non è univoco.")
     result = results[0]
     password, company_code = result.values()
     query = text(
@@ -61,9 +64,7 @@ def get_userinfo_from_company_code(company_code) -> tuple[None, None] | tuple[st
     )
     results = _query_with_input(query, {"id": company_code})
     if len(results) != 1:
-        raise ValueError(
-            "Il codice aziendale non è univoco."
-        )
+        raise ValueError("Il codice aziendale non è univoco.")
     group_type = results[0]["tipo_gruppo"]
     return group_type, password
 
@@ -189,7 +190,15 @@ def get_dresses_from_event_code(event_code) -> list[dict[str, str]]:
     return _query_with_input(query, {"id": event_code})
 
 
-def insert_work_shift(new_start, new_end, building_code, floor_code, room_code, codice_lavoro, description) -> None:
+def insert_work_shift(
+    new_start,
+    new_end,
+    building_code,
+    floor_code,
+    room_code,
+    codice_lavoro,
+    description,
+) -> None:
     query = text(
         """
             INSERT INTO TURNO_di_LAVORO (
@@ -229,7 +238,15 @@ def insert_work_shift(new_start, new_end, building_code, floor_code, room_code, 
     session.commit()
 
 
-def insert_new_expense(contract_code, date, cost, address_street=None, address_street_number=None, job_code=None, fiscal_code=None) -> None:
+def insert_new_expense(
+    contract_code,
+    date,
+    cost,
+    address_street=None,
+    address_street_number=None,
+    job_code=None,
+    fiscal_code=None,
+) -> None:
     query = text(
         """
             INSERT INTO SPESE(codice_contrattuale, data, costo, indirizzo___via, indirizzo___nuemro_civico, codice_lavoro, CF) 
@@ -262,7 +279,7 @@ def get_total_hours_worked_by_employee(cf) -> list[dict[str, str]]:
         """
     )
     result = session.execute(query, {"cf": cf})
-    result_list =  compress_to_dict_list(result)
+    result_list = compress_to_dict_list(result)
     if result_list and len(result_list) > 1:
         raise "Errore: più di un risultato trovato per il CF specificato."
     return result_list if result_list else [{"numero_ore": 0}]
@@ -337,6 +354,3 @@ def change_employee_work_group(cf, new_codice_lavoro) -> None:
         },
     )
     session.commit()
-
-
-

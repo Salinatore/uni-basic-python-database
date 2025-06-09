@@ -4,6 +4,7 @@ from model.operation_user import USER_OPERATIONS
 
 ADMIN_CODE = "admin"
 
+
 class Controller:
     def __init__(self):
         self._gui = Gui(self._login_handler)
@@ -30,5 +31,7 @@ class Controller:
         if group_type.lower() == ADMIN_CODE:
             self._gui.show_admin_screen(USER_OPERATIONS)
         else:
-            non_admin_operations = [op for op in USER_OPERATIONS if not op.admin_only]
+            non_admin_operations = [
+                op for op in USER_OPERATIONS if not op.admin_only
+            ]
             self._gui.show_worker_screen(non_admin_operations)
