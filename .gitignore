@@ -180,4 +180,4 @@ log.txt
 .DS_Store
 
 #config file
-models/config.py
+model/config.py
