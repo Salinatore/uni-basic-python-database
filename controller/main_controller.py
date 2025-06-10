@@ -3,7 +3,7 @@ from typing import List
 
 from model import db
 from view.gui import Gui
-from controller.operation_user import build_user_operations, Operation
+from controller.operations_catalog import get_admin_operations, get_worker_operations
 
 ADMIN_CODE = "admin"
 
@@ -36,17 +36,13 @@ class Controller:
                 )
                 return
 
-            all_operations: List[Operation] = build_user_operations(self._gui)
             if group_type.lower() == ADMIN_CODE:
                 self._gui.run_on_ui_thread(
-                    self._gui.show_admin_screen, all_operations
+                    self._gui.show_admin_screen,  get_admin_operations(self._gui)
                 )
             else:
-                non_admin_operations = [
-                    op for op in all_operations if not op.admin_only
-                ]
                 self._gui.run_on_ui_thread(
-                    self._gui.show_worker_screen, non_admin_operations
+                    self._gui.show_worker_screen, get_worker_operations(self._gui)
                 )
 
         threading.Thread(target=thread_func, daemon=True).start()

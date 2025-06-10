@@ -48,7 +48,7 @@ def threaded_handler(gui, func):
     return wrapper
 
 
-def build_user_operations(gui):
+def get_admin_operations(gui) -> List[Operation]:
     return [
         Operation(
             "Visualizzare tutte le stanze contenute in un immobile",
@@ -151,3 +151,7 @@ def build_user_operations(gui):
             threaded_handler(gui, change_employee_work_group),
         ),
     ]
+
+
+def get_worker_operations(gui) -> List[Operation]:
+    return [op for op in get_admin_operations(gui) if not op.admin_only]
