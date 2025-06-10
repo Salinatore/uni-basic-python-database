@@ -226,11 +226,11 @@ class Gui:
         op_window.grab_set()
 
     def _execute_operation(
-            self,
-            operation: Operation,
-            entries: dict[str, tk.Entry],
-            result_text: tk.Text,
-            tree: ttk.Treeview,
+        self,
+        operation: Operation,
+        entries: dict[str, tk.Entry],
+        result_text: tk.Text,
+        tree: ttk.Treeview,
     ) -> None:
         self._clear_result_widgets(result_text, tree)
 
@@ -287,23 +287,29 @@ class Gui:
             self._set_result_text(
                 self._active_result_text,
                 "✅ Operazione completata con successo.",
-                "green"
+                "green",
             )
-        elif isinstance(result, list) and all(isinstance(d, dict) for d in result):
+        elif isinstance(result, list) and all(
+            isinstance(d, dict) for d in result
+        ):
             if not result:
                 self._set_result_text(
-                    self._active_result_text, "ℹ️ Nessun risultato trovato.", "blue"
+                    self._active_result_text,
+                    "ℹ️ Nessun risultato trovato.",
+                    "blue",
                 )
             else:
                 self._populate_table(self._active_tree, result)
         else:
-            self._set_result_text(self._active_result_text, str(result), "black")
+            self._set_result_text(
+                self._active_result_text, str(result), "black"
+            )
 
     def display_error(self, error: Exception):
         self._set_result_text(
             self._active_result_text,
             f"❌ Errore durante l'esecuzione: {error}",
-            "red"
+            "red",
         )
 
     def _destroy_view(self) -> None:

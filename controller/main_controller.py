@@ -19,7 +19,9 @@ class Controller:
         def thread_func():
             db_response = db.get_userinfo_from_company_code(company_code)
             if db_response is None:
-                self._gui.run_on_ui_thread(self._gui.show_company_code_not_found)
+                self._gui.run_on_ui_thread(
+                    self._gui.show_company_code_not_found
+                )
                 return
 
             group_type, db_password = db_response
@@ -29,18 +31,22 @@ class Controller:
                 return
 
             if not group_type:
-                self._gui.run_on_ui_thread(self._gui.show_not_associated_with_group)
+                self._gui.run_on_ui_thread(
+                    self._gui.show_not_associated_with_group
+                )
                 return
 
             all_operations: List[Operation] = build_user_operations(self._gui)
             if group_type.lower() == ADMIN_CODE:
-                self._gui.run_on_ui_thread(self._gui.show_admin_screen, all_operations)
+                self._gui.run_on_ui_thread(
+                    self._gui.show_admin_screen, all_operations
+                )
             else:
                 non_admin_operations = [
                     op for op in all_operations if not op.admin_only
                 ]
-                self._gui.run_on_ui_thread(self._gui.show_worker_screen, non_admin_operations)
+                self._gui.run_on_ui_thread(
+                    self._gui.show_worker_screen, non_admin_operations
+                )
 
         threading.Thread(target=thread_func, daemon=True).start()
-
-
