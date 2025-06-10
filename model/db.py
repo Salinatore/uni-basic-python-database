@@ -120,7 +120,7 @@ def get_dresses_from_model_code(model_code) -> list[dict[str, str]]:
             AND s.codice_contrattuale = t.codice_contrattuale
             AND t.codice_abito = :id;  
         """
-    )
+    ) # TODO: check if this query is correct
     return _query_with_input(query, {"id": model_code})
 
 
@@ -259,10 +259,10 @@ def insert_new_expense(
             "contract_code": contract_code,
             "date": date,
             "cost": cost,
-            "address_street": address_street,
-            "address_street_number": address_street_number,
-            "job_code": job_code,
-            "CF": fiscal_code,
+            "address_street": address_street if address_street else "NULL",
+            "address_street_number": address_street_number if address_street_number else "NULL",
+            "job_code": job_code if job_code else "NULL",
+            "CF": fiscal_code if fiscal_code else "NULL",
         },
     )
     session.commit()
@@ -281,7 +281,7 @@ def get_total_hours_worked_by_employee(cf) -> list[dict[str, str]]:
     result = session.execute(query, {"cf": cf})
     result_list = compress_to_dict_list(result)
     if result_list and len(result_list) > 1:
-        raise "Errore: più di un risultato trovato per il CF specificato."
+        raise ValueError("Errore: più di un risultato trovato per il CF specificato.")
     return result_list if result_list else [{"numero_ore": 0}]
 
 

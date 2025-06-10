@@ -3,7 +3,7 @@ from functools import partial
 from tkinter import Tk, messagebox, ttk
 from typing import List
 
-from model.operation_user import Operation
+from controller.operation_user import Operation
 
 
 class Gui:
@@ -19,6 +19,9 @@ class Gui:
     def start(self):
         self.show_login_screen()
         self._window.mainloop()
+
+    def run_on_ui_thread(self, func, *args):
+        self._window.after(0, func, *args)
 
     def close(self):
         self._window.quit()
@@ -223,11 +226,11 @@ class Gui:
         op_window.grab_set()
 
     def _execute_operation(
-        self,
-        operation: Operation,
-        entries: dict[str, tk.Entry],
-        result_text: tk.Text,
-        tree: ttk.Treeview,
+            self,
+            operation: Operation,
+            entries: dict[str, tk.Entry],
+            result_text: tk.Text,
+            tree: ttk.Treeview,
     ) -> None:
         self._clear_result_widgets(result_text, tree)
 
@@ -242,33 +245,11 @@ class Gui:
             )
             return
 
-        try:
-            result = operation.operation_handler(*args)
+        # Salva riferimenti a widget per accesso da run_on_ui_thread
+        self._active_result_text = result_text
+        self._active_tree = tree
 
-            if result is None:
-                self._set_result_text(
-                    result_text,
-                    "✅ Operazione completata con successo.",
-                    "green",
-                )
-
-            elif isinstance(result, list) and all(
-                isinstance(d, dict) for d in result
-            ):
-                if not result:
-                    self._set_result_text(
-                        result_text, "ℹ️ Nessun risultato trovato.", "blue"
-                    )
-                else:
-                    self._populate_table(tree, result)
-
-            else:
-                self._set_result_text(result_text, str(result), "black")
-
-        except Exception as e:
-            self._set_result_text(
-                result_text, f"❌ Errore durante l'esecuzione: {e}", "red"
-            )
+        operation.operation_handler(*args)
 
     def _set_result_text(
         self, text_widget: tk.Text, message: str, color: str
@@ -300,6 +281,30 @@ class Gui:
         for row in data:
             values = [str(row.get(col, "")) for col in columns]
             tree.insert("", "end", values=values)
+
+    def display_result(self, result):
+        if result is None:
+            self._set_result_text(
+                self._active_result_text,
+                "✅ Operazione completata con successo.",
+                "green"
+            )
+        elif isinstance(result, list) and all(isinstance(d, dict) for d in result):
+            if not result:
+                self._set_result_text(
+                    self._active_result_text, "ℹ️ Nessun risultato trovato.", "blue"
+                )
+            else:
+                self._populate_table(self._active_tree, result)
+        else:
+            self._set_result_text(self._active_result_text, str(result), "black")
+
+    def display_error(self, error: Exception):
+        self._set_result_text(
+            self._active_result_text,
+            f"❌ Errore durante l'esecuzione: {error}",
+            "red"
+        )
 
     def _destroy_view(self) -> None:
         self._window.protocol(
