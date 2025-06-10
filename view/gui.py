@@ -63,18 +63,14 @@ class Gui:
         entry1 = tk.Entry(frame, width=30)
         entry1.grid(row=1, column=0, pady=(0, 15))
 
-        tk.Label(frame, text="Password:").grid(
-            row=2, column=0, sticky="w", pady=(0, 5)
-        )
+        tk.Label(frame, text="Password:").grid(row=2, column=0, sticky="w", pady=(0, 5))
         entry2 = tk.Entry(frame, width=30, show="*")
         entry2.grid(row=3, column=0, pady=(0, 15))
 
         def submit_login(event=None):
             login_action(entry1.get(), entry2.get())
 
-        login_btn = tk.Button(
-            frame, text="Accedi", width=15, command=submit_login
-        )
+        login_btn = tk.Button(frame, text="Accedi", width=15, command=submit_login)
         login_btn.grid(row=4, column=0, pady=10)
 
         self._window.bind("<Return>", submit_login)
@@ -234,9 +230,7 @@ class Gui:
     ) -> None:
         self._clear_result_widgets(result_text, tree)
 
-        args = [
-            entries[field].get().strip() for field in operation.input_fields
-        ]
+        args = [entries[field].get().strip() for field in operation.input_fields]
         if any(not arg for arg in args) and operation.input_fields:
             self._set_result_text(
                 result_text,
@@ -251,9 +245,7 @@ class Gui:
 
         operation.operation_handler(*args)
 
-    def _set_result_text(
-        self, text_widget: tk.Text, message: str, color: str
-    ) -> None:
+    def _set_result_text(self, text_widget: tk.Text, message: str, color: str) -> None:
         text_widget.config(state="normal")
         text_widget.delete(1.0, tk.END)
         text_widget.insert(tk.END, message)
@@ -261,9 +253,7 @@ class Gui:
         text_widget.tag_add("color", "1.0", "end")
         text_widget.config(state="disabled")
 
-    def _clear_result_widgets(
-        self, text_widget: tk.Text, tree_widget: ttk.Treeview
-    ):
+    def _clear_result_widgets(self, text_widget: tk.Text, tree_widget: ttk.Treeview):
         text_widget.config(state="normal")
         text_widget.delete("1.0", tk.END)
         text_widget.config(state="disabled")
@@ -289,9 +279,7 @@ class Gui:
                 "✅ Operazione completata con successo.",
                 "green",
             )
-        elif isinstance(result, list) and all(
-            isinstance(d, dict) for d in result
-        ):
+        elif isinstance(result, list) and all(isinstance(d, dict) for d in result):
             if not result:
                 self._set_result_text(
                     self._active_result_text,
@@ -301,9 +289,7 @@ class Gui:
             else:
                 self._populate_table(self._active_tree, result)
         else:
-            self._set_result_text(
-                self._active_result_text, str(result), "black"
-            )
+            self._set_result_text(self._active_result_text, str(result), "black")
 
     def display_error(self, error: Exception):
         self._set_result_text(
@@ -313,9 +299,7 @@ class Gui:
         )
 
     def _destroy_view(self) -> None:
-        self._window.protocol(
-            "WM_DELETE_WINDOW", lambda: self.show_login_screen()
-        )
+        self._window.protocol("WM_DELETE_WINDOW", lambda: self.show_login_screen())
         self._window.bind("<Return>", lambda event: None)
         for widget in self._window.winfo_children():
             widget.destroy()

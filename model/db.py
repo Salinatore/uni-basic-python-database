@@ -283,9 +283,7 @@ def get_total_hours_worked_by_employee(cf) -> list[dict[str, str]]:
     result = session.execute(query, {"cf": cf})
     result_list = compress_to_dict_list(result)
     if result_list and len(result_list) > 1:
-        raise ValueError(
-            "Errore: più di un risultato trovato per il CF specificato."
-        )
+        raise ValueError("Errore: più di un risultato trovato per il CF specificato.")
     return result_list if result_list else [{"numero_ore": 0}]
 
 

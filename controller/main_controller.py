@@ -1,5 +1,4 @@
 import threading
-from typing import List
 
 from model import db
 from view.gui import Gui
@@ -19,9 +18,7 @@ class Controller:
         def thread_func():
             db_response = db.get_userinfo_from_company_code(company_code)
             if db_response is None:
-                self._gui.run_on_ui_thread(
-                    self._gui.show_company_code_not_found
-                )
+                self._gui.run_on_ui_thread(self._gui.show_company_code_not_found)
                 return
 
             group_type, db_password = db_response
@@ -31,14 +28,12 @@ class Controller:
                 return
 
             if not group_type:
-                self._gui.run_on_ui_thread(
-                    self._gui.show_not_associated_with_group
-                )
+                self._gui.run_on_ui_thread(self._gui.show_not_associated_with_group)
                 return
 
             if group_type.lower() == ADMIN_CODE:
                 self._gui.run_on_ui_thread(
-                    self._gui.show_admin_screen,  get_admin_operations(self._gui)
+                    self._gui.show_admin_screen, get_admin_operations(self._gui)
                 )
             else:
                 self._gui.run_on_ui_thread(
