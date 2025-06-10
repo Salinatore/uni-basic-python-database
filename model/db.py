@@ -118,9 +118,10 @@ def get_dresses_from_model_code(model_code) -> list[dict[str, str]]:
             FROM modella m, spesa s, turno_della_modella_nella_sfilata t, abito a
             WHERE m.CF = s.CF
             AND s.codice_contrattuale = t.codice_contrattuale
-            AND t.codice_abito = :id;  
+            AND t.codice_abito = a.codice_abito
+            AND m.CF = :id;  
         """
-    )  # TODO: check if this query is correct
+    )
     return _query_with_input(query, {"id": model_code})
 
 
