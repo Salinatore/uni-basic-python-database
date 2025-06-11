@@ -1,7 +1,8 @@
 import threading
+from collections.abc import Callable
 from functools import wraps
 from dataclasses import dataclass, field
-from typing import List, Callable, Any
+from typing import Any
 
 from model.db import (
     get_rooms_from_building_code,
@@ -21,7 +22,7 @@ from model.db import (
 )
 
 
-def default_operation(*args, **kwargs):
+def default_operation(*args, **kwargs) -> None:
     raise NotImplementedError("This operation is not implemented yet.")
 
 
@@ -29,7 +30,7 @@ def default_operation(*args, **kwargs):
 class Operation:
     desc: str
     admin_only: bool
-    input_fields: List[str] = field(default_factory=list)
+    input_fields: list[str] = field(default_factory=list)
     operation_handler: Callable[..., Any] = field(default=default_operation)
 
 
@@ -48,7 +49,7 @@ def threaded_handler(gui, func):
     return wrapper
 
 
-def get_admin_operations(gui) -> List[Operation]:
+def get_admin_operations(gui) -> list[Operation]:
     return [
         Operation(
             "Visualizzare tutte le stanze contenute in un immobile",
@@ -153,5 +154,5 @@ def get_admin_operations(gui) -> List[Operation]:
     ]
 
 
-def get_worker_operations(gui) -> List[Operation]:
+def get_worker_operations(gui) -> list[Operation]:
     return [op for op in get_admin_operations(gui) if not op.admin_only]
