@@ -1,24 +1,32 @@
-import threading
+"""
+This module defines the operation catalog for the application.
+
+It includes various operations that users can perform, each represented
+by an `Operation` dataclass. Operations are executed in separate threads
+to avoid blocking the GUI.
+"""
+
 from collections.abc import Callable
-from functools import wraps
 from dataclasses import dataclass, field
+from functools import wraps
+import threading
 from typing import Any
 
 from model.db import (
-    get_rooms_from_building_code,
-    get_dresses_from_model_code,
-    get_materials_from_dress_code,
-    insert_work_group,
-    insert_participation,
-    get_work_groups_from_room_number,
-    get_max_paid_model_contract,
-    get_event_with_most_participants,
-    get_dresses_from_event_code,
-    insert_work_shift,
-    insert_new_expense,
-    get_total_hours_worked_by_employee,
-    get_highest_paid_work_group,
     change_employee_work_group,
+    get_dresses_from_event_code,
+    get_dresses_from_model_code,
+    get_event_with_most_participants,
+    get_highest_paid_work_group,
+    get_max_paid_model_contract,
+    get_total_hours_worked_by_employee,
+    get_work_groups_from_room_number,
+    get_materials_from_dress_code,
+    get_rooms_from_building_code,
+    insert_new_expense,
+    insert_participation,
+    insert_work_group,
+    insert_work_shift,
 )
 
 
@@ -28,6 +36,16 @@ def default_operation(*args, **kwargs) -> None:
 
 @dataclass(frozen=True)
 class Operation:
+    """
+    Represents an operation that can be performed in the application.
+
+    Attributes:
+        desc (str): Description of the operation.
+        admin_only (bool): Indicates if the operation is restricted to admin users.
+        input_fields (list[str]): List of input fields required for the operation.
+        operation_handler (Callable[..., Any]): Function that handles the operation logic by calling the model.
+    """
+
     desc: str
     admin_only: bool
     input_fields: list[str] = field(default_factory=list)

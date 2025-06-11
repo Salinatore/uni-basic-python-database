@@ -1,12 +1,19 @@
+"""
+This module defines the GUI for the application using Tkinter.
+"""
+
 import tkinter as tk
 from functools import partial
 from tkinter import Tk, messagebox, ttk
-from typing import List
 
 from controller.operations_catalog import Operation
 
 
 class Gui:
+    """
+    GUI class for the application, responsible for displaying screens and handling user interactions.
+    """
+
     ERROR_TITLE = "Errore"
 
     def __init__(self, login_action):
@@ -77,7 +84,7 @@ class Gui:
         entry1.focus()
 
     def _build_operation_screen(
-        self, operations_list: List[Operation], screen_name: str
+        self, operations_list: list[Operation], screen_name: str
     ) -> None:
         self._destroy_view()
         self._window.geometry("500x300")

@@ -1,9 +1,21 @@
+"""
+This module provides database access functions for the application.
+
+It manages connection setup and teardown using SQLAlchemy,
+and defines various queries and inserts operations related to personnel, work groups,
+events, materials, expenses, and contracts.
+
+Functions use SQLAlchemy session to execute parameterized queries
+and return results as lists of dictionaries.
+"""
+
+import atexit
 from typing import Any
 
 from sqlalchemy import create_engine, MetaData, text, Result
 from sqlalchemy.orm import sessionmaker
+
 from model.config import DATABASE_URL
-import atexit
 
 # Create engine and session ONCE
 engine = create_engine(DATABASE_URL)

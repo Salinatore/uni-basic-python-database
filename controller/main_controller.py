@@ -1,3 +1,7 @@
+"""
+This module defines the main controller for the application.
+"""
+
 import threading
 
 from model import db
@@ -8,6 +12,15 @@ ADMIN_CODE = "admin"
 
 
 class Controller:
+    """
+    Main application controller handling login and GUI initialization.
+
+    Processes user login asynchronously and instructs the GUI to display
+    different screens based on the user group type (admin or worker).
+
+    It delegates operations management to operations_catalog module.
+    """
+
     def __init__(self):
         self._gui = Gui(self._login_handler)
 
