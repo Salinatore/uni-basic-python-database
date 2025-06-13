@@ -10,6 +10,7 @@ and return results as lists of dictionaries.
 """
 
 import atexit
+from datetime import datetime
 from typing import Any
 
 from sqlalchemy import create_engine, MetaData, text, Result
@@ -32,7 +33,7 @@ def _shutdown_connection():
     session.close()
 
 
-def compress_to_dict_list(query_results: Result[Any]) -> list[dict[str, Any]]:
+def _compress_to_dict_list(query_results: Result[Any]) -> list[dict[str, Any]]:
     return [dict(row) for row in query_results.mappings()]
 
 
@@ -42,7 +43,7 @@ def _query_with_input(
     if not isinstance(params, dict):
         params = {default_key: params}
     results: Result = session.execute(query_text, params)
-    return compress_to_dict_list(results)
+    return _compress_to_dict_list(results)
 
 
 def get_userinfo_from_company_code(
@@ -173,7 +174,7 @@ def get_max_paid_model_contract() -> list[dict[str, str]]:
         """
     )
     result = session.execute(query)
-    return compress_to_dict_list(result)
+    return _compress_to_dict_list(result)
 
 
 def get_event_with_most_participants() -> list[dict[str, str]]:
@@ -188,7 +189,7 @@ def get_event_with_most_participants() -> list[dict[str, str]]:
         """
     )
     results = session.execute(query)
-    return compress_to_dict_list(results)
+    return _compress_to_dict_list(results)
 
 
 def get_dresses_from_event_code(event_code) -> list[dict[str, str]]:
@@ -212,6 +213,46 @@ def insert_work_shift(
     codice_lavoro,
     description,
 ) -> None:
+    def to_datetime(dt):
+        if isinstance(dt, datetime):
+            return dt
+        try:
+            return datetime.strptime(dt, "%Y-%m-%d %H:%M:%S")
+        except Exception as e:
+            raise ValueError(f"Invalid datetime format: {dt}") from e
+
+    new_start_dt = to_datetime(new_start)
+    new_end_dt = to_datetime(new_end)
+
+    if new_end_dt <= new_start_dt:
+        raise ValueError("La data di fine deve essere successiva alla data di inizio")
+
+    query = text(
+        """
+        SELECT data_inizio, data_fine
+        FROM TURNO_di_LAVORO 
+        WHERE Div_numero_immobile = :building_code 
+            AND Div_numero = :floor_code
+            AND numero = :room_code
+            AND cancellato = '0';
+        """
+    )
+    results = session.execute(
+        query, {"building_code": building_code, "floor_code": floor_code, "room_code": room_code}
+    )
+    dict_list = _compress_to_dict_list(results)
+
+    already_booked = False
+    for row in dict_list:
+        existing_start = to_datetime(row["data_inizio"])
+        existing_end = to_datetime(row["data_fine"])
+        if new_start_dt < existing_end and new_end_dt > existing_start:
+            already_booked = True
+            break
+
+    if already_booked:
+        raise ValueError("La stanza è già occupata in quel periodo")
+
     query = text(
         """
             INSERT INTO TURNO_di_LAVORO (
@@ -294,7 +335,7 @@ def get_total_hours_worked_by_employee(cf) -> list[dict[str, str]]:
         """
     )
     result = session.execute(query, {"cf": cf})
-    result_list = compress_to_dict_list(result)
+    result_list = _compress_to_dict_list(result)
     if result_list and len(result_list) > 1:
         raise ValueError("Errore: più di un risultato trovato per il CF specificato.")
     return result_list if result_list else [{"numero_ore": 0}]
@@ -319,7 +360,7 @@ def get_highest_paid_work_group() -> list[dict[str, str]]:
         """
     )
     results = session.execute(query)
-    return compress_to_dict_list(results)
+    return _compress_to_dict_list(results)
 
 
 def change_employee_work_group(cf, new_codice_lavoro) -> None:
