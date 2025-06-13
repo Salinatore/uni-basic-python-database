@@ -145,7 +145,7 @@ def get_admin_operations(gui) -> list[Operation]:
                 "id spesa",
                 "data e ora",
                 "costo",
-                "materiali:quantità", #TODO: change to explain functioning
+                "materiali [codice_materile-quantità,...] es:[1-20]",
             ],
             threaded_handler(gui, insert_new_expense),
         ),
