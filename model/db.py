@@ -246,7 +246,7 @@ def insert_work_shift(
     for row in dict_list:
         existing_start = to_datetime(row["data_inizio"])
         existing_end = to_datetime(row["data_fine"])
-        if new_start_dt < existing_end and new_end_dt > existing_start:
+        if new_start_dt <= existing_end and new_end_dt >= existing_start:
             already_booked = True
             break
 
