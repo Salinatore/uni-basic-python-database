@@ -39,12 +39,9 @@ uv run main.py
 ```
 
 To login as an admin user, use the following credentials:
-```plaintext
 Codice Aziendale: 1
 Password: abc12
-```
+
 To login as a regular user, use the following credentials:
-```plaintext
 Codice Aziendale: 2
 Password: def34
-```
