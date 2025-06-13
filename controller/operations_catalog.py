@@ -60,7 +60,7 @@ def threaded_handler(gui, func):
                 result = func(*args)
                 gui.run_on_ui_thread(lambda: gui.display_result(result))
             except Exception as e:
-                gui.run_on_ui_thread(lambda: gui.display_error(e))
+                gui.run_on_ui_thread(lambda e=e: gui.display_error(e))
 
         threading.Thread(target=task, daemon=True).start()
 
@@ -141,13 +141,11 @@ def get_admin_operations(gui) -> list[Operation]:
             "Aggiunta di un nuovo acquisto",
             False,
             [
+                "codice_lavoro",
                 "id spesa",
                 "data e ora",
                 "costo",
-                "CF (opzionale)",
-                "codice contrattuale (opzionale)",
-                "codice materiale (opzionale)",
-                "altro campo (opzionale)",
+                "materiali:quantità", #TODO: change to explain functioning
             ],
             threaded_handler(gui, insert_new_expense),
         ),

@@ -33,6 +33,15 @@ def _shutdown_connection():
     session.close()
 
 
+def to_datetime(dt):
+    if isinstance(dt, datetime):
+        return dt
+    try:
+        return datetime.strptime(dt, "%Y-%m-%d %H:%M:%S")
+    except Exception as e:
+        raise ValueError(f"Invalid datetime format: {dt}") from e
+
+
 def _compress_to_dict_list(query_results: Result[Any]) -> list[dict[str, Any]]:
     return [dict(row) for row in query_results.mappings()]
 
@@ -213,13 +222,6 @@ def insert_work_shift(
     codice_lavoro,
     description,
 ) -> None:
-    def to_datetime(dt):
-        if isinstance(dt, datetime):
-            return dt
-        try:
-            return datetime.strptime(dt, "%Y-%m-%d %H:%M:%S")
-        except Exception as e:
-            raise ValueError(f"Invalid datetime format: {dt}") from e
 
     new_start_dt = to_datetime(new_start)
     new_end_dt = to_datetime(new_end)
@@ -293,17 +295,16 @@ def insert_work_shift(
 
 
 def insert_new_expense(
+    job_code,
     contract_code,
     date,
     cost,
-    address_street=None,
-    address_street_number=None,
-    job_code=None,
-    fiscal_code=None,
+    material_quantity_str
 ) -> None:
+    date_dt = to_datetime(date)
     query = text(
         """
-            INSERT INTO SPESE(codice_contrattuale, data, costo, indirizzo___via, indirizzo___nuemro_civico, codice_lavoro, CF) 
+            INSERT INTO SPESA(codice_contrattuale, data, costo, indirizzo___via, indirizzo___nuemro_civico, codice_lavoro, CF) 
             VALUES (:contract_code, :date, :cost, :address_street, :address_street_number, :job_code, :CF);
         """
     )
@@ -311,16 +312,49 @@ def insert_new_expense(
         query,
         {
             "contract_code": contract_code,
-            "date": date,
+            "date": date_dt,
             "cost": cost,
-            "address_street": address_street if address_street else "NULL",
-            "address_street_number": address_street_number
-            if address_street_number
-            else "NULL",
-            "job_code": job_code if job_code else "NULL",
-            "CF": fiscal_code if fiscal_code else "NULL",
+            "address_street": None,
+            "address_street_number": None,
+            "job_code": job_code,
+            "CF": None,
         },
     )
+    session.commit()
+
+    material_tuple_list: list[tuple[str, int]] = []
+    if material_quantity_str:
+        for item in material_quantity_str.split(','):
+            parts = item.strip().split('-')
+            if len(parts) != 2:
+                raise ValueError(
+                    f"Invalid material entry format: '{item.strip()}'. Expected format 'material-quantity'.")
+
+            material, quantity_str = parts
+            material = material.strip()
+            try:
+                quantity = int(quantity_str.strip())
+            except ValueError:
+                raise ValueError(
+                    f"Invalid quantity for material '{material}': '{quantity_str.strip()}' is not an integer.")
+
+            material_tuple_list.append((material, quantity))
+
+    query = text(
+        """
+        INSERT INTO relativo (codice_contrattuale, codice_materiale, quantita) VALUES
+        (:contract_code, :material_code, :quantity);
+        """
+    )
+    for material_code, quantity in material_tuple_list:
+        session.execute(
+            query,
+            {
+                "contract_code": contract_code,
+                "material_code": material_code,
+                "quantity": quantity
+            },
+        )
     session.commit()
 
 
