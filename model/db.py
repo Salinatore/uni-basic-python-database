@@ -92,6 +92,7 @@ def get_userinfo_from_company_code(
 
 
 def get_rooms_from_building_code(building_code) -> list[dict[str, str]]:
+    building_code = int(building_code)
     query = text(
         """
             SELECT Div_numero_immobile AS numero_immobile, Div_numero AS numero_piano, numero AS numero_stanza, partecipanti_massimi, tipo_stanza, capienza, codice_lavoro AS codice_gruppo_lavoro
