@@ -1401,8 +1401,7 @@ INSERT INTO PERSONALE (
 ('2020-10-11 07:45:00', 'GLLFNC76G14L219S', 'Francesca', 'Gallo', 366223344, 'Via Firenze', 5, 'specializzato', '2021-01-20', 10, 1, false, 'stu34'),
 ('2019-12-05 13:00:00', 'TRNTNI85H20F205U', 'Tania', 'Trentini', 334889900, 'Via Bari', 102, 'specializzato', '2020-05-09', 28, 2, false, 'vwx56'),
 ('2023-02-01 16:30:00', 'BSCLNZ89I12M082P', 'Lorenzo', 'Boschi', 388667788, 'Via Palermo', 88, 'specializzato', '2023-05-10', 20, 3, false, 'yza78'),
-('2021-04-17 09:50:00', 'MRTGLD90L01Z404N', 'Gilda', 'Moretti', 350112233, 'Via Genova', 6, 'specializzato', '2022-02-20', 43, 1, false, 'bcd90'),
-('2023-11-28 10:00:00', 'VRDLGU85B15C351Y', 'fernanda', 'verdinini', 7645381929, 'Via giangiacomo', 8, 'specializzato', '2024-03-20', 2, 3, false, 'pqrl88');
+('2021-04-17 09:50:00', 'MRTGLD90L01Z404N', 'Gilda', 'Moretti', 350112233, 'Via Genova', 6, 'specializzato', '2022-02-20', 43, 1, false, 'bcd90');
 
 INSERT INTO SPESA (codice_contrattuale, data, costo, indirizzo___via, indirizzo___nuemro_civico, codice_lavoro, CF) VALUES
 (7001, '2025-06-05 10:30:00', 180.00, 'Via Milano', 45, 1, 'BNCLDA90B12F205Y'),
@@ -1566,8 +1565,7 @@ INSERT INTO OCCUPAZIONE (codice_tipologia_contratto, CF, inizio_validita, fine_v
 (1, 'GLLFNC76G14L219S', '2021-01-20', NULL),
 (22, 'TRNTNI85H20F205U', '2020-05-09', '2022-05-09'),
 (21, 'BSCLNZ89I12M082P', '2023-05-10', '2023-11-10'),
-(1, 'MRTGLD90L01Z404N', '2022-02-20', NULL),
-(1, 'BNCLGU85C15H501Z', '2023-01-15', NULL);
+(1, 'MRTGLD90L01Z404N', '2022-02-20', NULL);
 
 INSERT INTO OCCUPAZIONE_PASSATA (codice_lavoro, inizio_lavoro, CF, fine_lavoro) VALUES
 (10, '2022-03-01 09:00:00', 'RSSMRA80A01F205X', '2023-01-10 18:00:00'),
@@ -1584,7 +1582,6 @@ INSERT INTO OCCUPAZIONE_PASSATA (codice_lavoro, inizio_lavoro, CF, fine_lavoro) 
 
 
 INSERT INTO tariffa (nome, CF, prezzo) VALUES
-('Conferenza', 'RSSMRA85M01H501U', 150),
 ('Workshop', 'BNCLDA90B12F205Y', 120),
 ('Seminario', 'VRDLNZ91C23G204Z', 130),
 ('Fiera', 'FMLGPN88D15D214W', 100),
