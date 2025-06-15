@@ -51,10 +51,10 @@ class Gui:
         self._build_login_screen(self._login_action)
 
     def show_worker_screen(self, operations_dic):
-        self._build_operation_screen(operations_dic, "Lavoratore")
+        self._build_operations_screen(operations_dic, "Lavoratore")
 
     def show_admin_screen(self, operations_dic):
-        self._build_operation_screen(operations_dic, "Admin")
+        self._build_operations_screen(operations_dic, "Admin")
 
     def _build_login_screen(self, login_action):
         self._window.geometry("350x220")
@@ -83,7 +83,7 @@ class Gui:
         self._window.bind("<Return>", submit_login)
         entry1.focus()
 
-    def _build_operation_screen(
+    def _build_operations_screen(
         self, operations_list: list[Operation], screen_name: str
     ) -> None:
         self._destroy_view()
@@ -143,87 +143,98 @@ class Gui:
         op_window.geometry("800x600")
         op_window.resizable(True, True)
 
-        frame = tk.Frame(op_window, padx=20, pady=20)
-        frame.pack(fill=tk.BOTH, expand=True)
+        canvas = tk.Canvas(op_window, borderwidth=0)
+        scrollbar = ttk.Scrollbar(op_window, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=scrollbar.set)
 
-        tk.Label(frame, text=operation.desc, font=("Arial", 14, "bold")).pack(
-            pady=(0, 10)
-        )
+        scrollbar.pack(side="right", fill="y")
+        canvas.pack(side="left", fill="both", expand=True)
+
+        scrollable_frame = ttk.Frame(canvas)
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw", tags="frame")
+
+        def on_frame_configure(event):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+        def on_canvas_configure(event):
+            canvas.itemconfig("frame", width=event.width)
+
+        scrollable_frame.bind("<Configure>", on_frame_configure)
+        canvas.bind("<Configure>", on_canvas_configure)
+
+        tk.Label(scrollable_frame, text=operation.desc, font=("Arial", 14, "bold")).pack(pady=(10, 20), anchor="w",padx=20)
 
         entries = {}
 
         if operation.input_fields:
             for field in operation.input_fields:
                 if isinstance(field, str):
-                    label = tk.Label(frame, text=field + ":")
-                    label.pack(anchor="w")
-                    entry = tk.Entry(frame, width=40)
-                    entry.pack(fill="x", pady=(0, 10))
+                    tk.Label(scrollable_frame, text=field + ":").pack(anchor="w", padx=20)
+                    entry = tk.Entry(scrollable_frame, width=40)
+                    entry.pack(fill="x", padx=20, pady=(0, 10))
                     entries[field] = entry
                 elif isinstance(field, dict):
                     field_name = field.get("name", "Field")
                     field_type = field.get("type", "text")
 
-                    label = tk.Label(frame, text=field_name + ":")
-                    label.pack(anchor="w")
+                    tk.Label(scrollable_frame, text=field_name + ":").pack(anchor="w", padx=20)
 
                     if field_type == "dropdown":
                         combo = ttk.Combobox(
-                            frame,
+                            scrollable_frame,
                             values=field.get("options", []),
                             state="readonly",
                             width=38,
                             font=("Arial", 11),
                         )
-                        combo.pack(fill="x", pady=(0, 10))
+                        combo.pack(fill="x", padx=20, pady=(0, 10))
                         entries[field_name] = combo
 
                     elif field_type == "checkbox":
                         var = tk.BooleanVar()
-                        check = tk.Checkbutton(frame, variable=var)
-                        check.pack(anchor="w", pady=(0, 10))
+                        check = tk.Checkbutton(scrollable_frame, variable=var)
+                        check.pack(anchor="w", padx=20, pady=(0, 10))
                         entries[field_name] = var
 
                     else:
-                        entry = tk.Entry(frame, width=40)
-                        entry.pack(fill="x", pady=(0, 10))
+                        entry = tk.Entry(scrollable_frame, width=40)
+                        entry.pack(fill="x", padx=20, pady=(0, 10))
                         entries[field_name] = entry
         else:
-            tk.Label(frame, text="Nessun input richiesto.").pack(pady=(0, 10))
+            tk.Label(scrollable_frame, text="Nessun input richiesto.").pack(pady=(0, 10), padx=20)
 
-        # Result area frame
-        result_frame = tk.Frame(frame)
-        result_frame.pack(fill="both", expand=True, pady=(10, 0))
+        # Result area
+        result_frame = tk.Frame(scrollable_frame)
+        result_frame.pack(fill="both", expand=True, padx=20, pady=(10, 0))
 
         # Text area for messages
-        scrollbar = tk.Scrollbar(result_frame)
+        scrollbar_result = tk.Scrollbar(result_frame)
         result_text = tk.Text(
             result_frame,
             wrap="word",
             height=5,
             width=70,
-            yscrollcommand=scrollbar.set,
+            yscrollcommand=scrollbar_result.set,
             state="disabled",
             background="#f0f0f0",
             relief=tk.SUNKEN,
         )
-        scrollbar.config(command=result_text.yview)
+        scrollbar_result.config(command=result_text.yview)
         result_text.pack(side="top", fill="x", expand=False)
-        scrollbar.pack(side="right", fill="y")
+        scrollbar_result.pack(side="right", fill="y")
 
-        # Table for list[dict[str, Any]]
+        # Table
         tree = ttk.Treeview(result_frame, show="headings")
         tree.pack(fill="both", expand=True, pady=(10, 0))
 
         # Execute button
-        execute_btn = tk.Button(
-            frame,
+        tk.Button(
+            scrollable_frame,
             text="Esegui",
-            command=partial(
-                self._execute_operation, operation, entries, result_text, tree
-            ),
-        )
-        execute_btn.pack(pady=(10, 0))
+            font=("Arial", 11),
+            width=20,
+            command=partial(self._execute_operation, operation, entries, result_text, tree),
+        ).pack(pady=20)
 
         op_window.transient(self._window)
         op_window.grab_set()
