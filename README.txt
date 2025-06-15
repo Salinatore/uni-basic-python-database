@@ -1,15 +1,14 @@
 ## Getting Started
 
-Assuming you have [uv](https://docs.astral.sh/uv/) installed, you can run the following command to install the dependencies:
+Assuming you have [uv](https://docs.astral.sh/uv/) installed, you can run the following command to install all the dependencies:
 
 ```bash
 uv sync
 ```
 
 Before running the application,
-make sure to set up your database configuration file in model/config.py and create the database from seed.sql.
-You need to provide your database credentials in the `model/config.py` file.
-The database connection string should be formatted as follows:
+make sure to set up your database configuration file in model/config.py.
+As an example, you can use the following configuration:
 
 ```python
 from urllib.parse import quote_plus
@@ -25,23 +24,26 @@ password_enc = quote_plus(DB_PASSWORD)
 DATABASE_URL = f"mysql+pymysql://{DB_USERNAME}:{password_enc}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 ```
 
-Before running the application, make sure to set up your database configuration file in model/config.py.
-Then, create the database by executing the seed.sql file using the following command:
+Create the database by executing the seed.sql.
+You can do that using the following command:
 
 ```bash
 mysql -u root -p  < seed.sql
 ```
 
-To run the application, use the following command:
+To run the application, you can use the following command:
 
 ```bash
 uv run main.py
 ```
 
-To login as an admin user, use the following credentials:
+To log in as an admin user, you can use the following credentials:
+```plaintext
 Codice Aziendale: 1
 Password: abc12
-
-To login as a regular user, use the following credentials:
+```
+To log in as a regular user, you can use the following credentials:
+```plaintext
 Codice Aziendale: 2
 Password: def34
+```
