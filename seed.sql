@@ -133,7 +133,7 @@ create table PERSONALE (
      telefono int not null,
      residenza___via varchar(100) not null,
      residenza___numero_civico int not null,
-     tipo_personale char(10) not null,
+     tipo_personale varchar(20) not null,
      occupazione_presente_inizio date,
      codice_lavoro int,
      numero_immobile int,
@@ -947,7 +947,6 @@ INSERT INTO CONTRATTO_PERSONALE (descrizione, stipendio_mensile) VALUES
 ('Contratto di lavoro stagionale primavera-estate', 2300);
 
 INSERT INTO MODELLA (CF, nome, cognome, telefono, residenza___via, residenza___numero_civico) VALUES
-('RSSMRA85M01H501U', 'Maria', 'Rossi', 34512345, 'Via Roma', 12),
 ('BNCLDA90B12F205Y', 'Lara', 'Bianchi', 32976543, 'Via Milano', 45),
 ('VRDLNZ91C23G204Z', 'Lorenza', 'Verdi', 34798765, 'Corso Italia', 7),
 ('FMLGPN88D15D214W', 'Giulia', 'Famiglia', 33311223, 'Via Torino', 22),
@@ -1393,17 +1392,17 @@ INSERT INTO PERSONALE (
     occupazione_presente_inizio, codice_lavoro, numero_immobile,
     amministratore_sistema, password_applicativo
 ) VALUES
-('2022-05-10 10:00:00', 'RSSMRA80A01F205X', 'Maria', 'Rossi', 345112233, 'Via Milano', 12, 'tecnico', '2023-01-15', 1, 1, true, 'abc12'),
-('2021-09-01 09:00:00', 'VRDLGU85B15C351Y', 'Luigi', 'Verdi', 331998877, 'Via Roma', 45, 'volontario', '2023-02-10', 30, 1, false, 'def34'),
-('2023-03-15 08:30:00', 'BNCLRA90C30H501Z', 'Chiara', 'Bianchi', 320556677, 'Via Torino', 78, 'manager', '2023-03-01', 15, 2, false, 'ghi56'),
-('2020-11-20 14:20:00', 'PLZZNT75D22L219Q', 'Antonio', 'Palazzi', 392887766, 'Viale Venezia', 90, 'tecnico', '2022-09-18', 40, 2, false, 'jkl78'),
-('2021-01-07 12:00:00', 'FRNCST88E18A794W', 'Stefano', 'Franchi', 389665544, 'Corso Italia', 33, 'volontario', '2023-04-03', 5, 3, false, 'mno90'),
-('2022-06-21 11:15:00', 'LMBRTI95F05Z404M', 'Giulia', 'Lamberti', 377445566, 'Via Napoli', 27, 'manager', '2022-10-01', 46, 3, false, 'pqr12'),
-('2020-10-11 07:45:00', 'GLLFNC76G14L219S', 'Francesca', 'Gallo', 366223344, 'Via Firenze', 5, 'tecnico', '2021-01-20', 10, 1, false, 'stu34'),
-('2019-12-05 13:00:00', 'TRNTNI85H20F205U', 'Tania', 'Trentini', 334889900, 'Via Bari', 102, 'manager', '2020-05-09', 28, 2, false, 'vwx56'),
-('2023-02-01 16:30:00', 'BSCLNZ89I12M082P', 'Lorenzo', 'Boschi', 388667788, 'Via Palermo', 88, 'volontario', '2023-05-10', 20, 3, false, 'yza78'),
-('2021-04-17 09:50:00', 'MRTGLD90L01Z404N', 'Gilda', 'Moretti', 350112233, 'Via Genova', 6, 'tecnico', '2022-02-20', 43, 1, false, 'bcd90'),
-('2023-09-18 09:30:00', 'BNCLGU85C15H501Z', 'Luigi', 'Bianchi', 349998877, 'Via Garibaldi', 25, 'tecnico', '2024-02-01', 1, 3, false, 'abc12');
+('2022-05-10 10:00:00', 'RSSMRA80A01F205X', 'Maria', 'Rossi', 345112233, 'Via Milano', 12, 'specializzato', '2023-01-15', 1, 1, true, 'abc12'),
+('2021-09-01 09:00:00', 'VRDLGU85B15C351Y', 'Luigi', 'Verdi', 331998877, 'Via Roma', 45, 'specializzato', '2023-02-10', 30, 1, false, 'def34'),
+('2023-03-15 08:30:00', 'BNCLRA90C30H501Z', 'Chiara', 'Bianchi', 320556677, 'Via Torino', 78, 'specializzato', '2023-03-01', 15, 2, false, 'ghi56'),
+('2020-11-20 14:20:00', 'PLZZNT75D22L219Q', 'Antonio', 'Palazzi', 392887766, 'Viale Venezia', 90, 'specializzato', '2022-09-18', 40, 2, false, 'jkl78'),
+('2021-01-07 12:00:00', 'FRNCST88E18A794W', 'Stefano', 'Franchi', 389665544, 'Corso Italia', 33, 'specializzato', '2023-04-03', 5, 3, false, 'mno90'),
+('2022-06-21 11:15:00', 'LMBRTI95F05Z404M', 'Giulia', 'Lamberti', 377445566, 'Via Napoli', 27, 'specializzato', '2022-10-01', 46, 3, false, 'pqr12'),
+('2020-10-11 07:45:00', 'GLLFNC76G14L219S', 'Francesca', 'Gallo', 366223344, 'Via Firenze', 5, 'specializzato', '2021-01-20', 10, 1, false, 'stu34'),
+('2019-12-05 13:00:00', 'TRNTNI85H20F205U', 'Tania', 'Trentini', 334889900, 'Via Bari', 102, 'specializzato', '2020-05-09', 28, 2, false, 'vwx56'),
+('2023-02-01 16:30:00', 'BSCLNZ89I12M082P', 'Lorenzo', 'Boschi', 388667788, 'Via Palermo', 88, 'specializzato', '2023-05-10', 20, 3, false, 'yza78'),
+('2021-04-17 09:50:00', 'MRTGLD90L01Z404N', 'Gilda', 'Moretti', 350112233, 'Via Genova', 6, 'specializzato', '2022-02-20', 43, 1, false, 'bcd90'),
+('2023-11-28 10:00:00', 'VRDLGU85B15C351Y', 'fernanda', 'verdinini', 7645381929, 'Via giangiacomo', 8, 'specializzato', '2024-03-20', 2, 3, false, 'pqrl88');
 
 INSERT INTO SPESA (codice_contrattuale, data, costo, indirizzo___via, indirizzo___nuemro_civico, codice_lavoro, CF) VALUES
 (7001, '2025-06-05 10:30:00', 180.00, 'Via Milano', 45, 1, 'BNCLDA90B12F205Y'),
