@@ -33,7 +33,7 @@ def _shutdown_connection():
     session.close()
 
 
-def to_datetime(dt):
+def _to_datetime(dt):
     if isinstance(dt, datetime):
         return dt
     try:
@@ -223,8 +223,8 @@ def insert_work_shift(
     codice_lavoro,
     description,
 ) -> None:
-    new_start_dt = to_datetime(new_start)
-    new_end_dt = to_datetime(new_end)
+    new_start_dt = _to_datetime(new_start)
+    new_end_dt = _to_datetime(new_end)
 
     if new_end_dt <= new_start_dt:
         raise ValueError("La data di fine deve essere successiva alla data di inizio")
@@ -251,8 +251,8 @@ def insert_work_shift(
 
     already_booked = False
     for row in dict_list:
-        existing_start = to_datetime(row["data_inizio"])
-        existing_end = to_datetime(row["data_fine"])
+        existing_start = _to_datetime(row["data_inizio"])
+        existing_end = _to_datetime(row["data_fine"])
         if new_start_dt <= existing_end and new_end_dt >= existing_start:
             already_booked = True
             break
@@ -302,7 +302,7 @@ def insert_work_shift(
 def insert_new_expense(
     job_code, contract_code, date, cost, material_quantity_str
 ) -> None:
-    date_dt = to_datetime(date)
+    date_dt = _to_datetime(date)
     query = text(
         """
             INSERT INTO SPESA(codice_contrattuale, data, costo, indirizzo___via, indirizzo___nuemro_civico, codice_lavoro, CF) 
