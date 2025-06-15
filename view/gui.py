@@ -162,14 +162,18 @@ class Gui:
         scrollable_frame.bind("<Configure>", on_frame_configure)
         canvas.bind("<Configure>", on_canvas_configure)
 
-        tk.Label(scrollable_frame, text=operation.desc, font=("Arial", 14, "bold")).pack(pady=(10, 20), anchor="w",padx=20)
+        tk.Label(
+            scrollable_frame, text=operation.desc, font=("Arial", 14, "bold")
+        ).pack(pady=(10, 20), anchor="w", padx=20)
 
         entries = {}
 
         if operation.input_fields:
             for field in operation.input_fields:
                 if isinstance(field, str):
-                    tk.Label(scrollable_frame, text=field + ":").pack(anchor="w", padx=20)
+                    tk.Label(scrollable_frame, text=field + ":").pack(
+                        anchor="w", padx=20
+                    )
                     entry = tk.Entry(scrollable_frame, width=40)
                     entry.pack(fill="x", padx=20, pady=(0, 10))
                     entries[field] = entry
@@ -177,7 +181,9 @@ class Gui:
                     field_name = field.get("name", "Field")
                     field_type = field.get("type", "text")
 
-                    tk.Label(scrollable_frame, text=field_name + ":").pack(anchor="w", padx=20)
+                    tk.Label(scrollable_frame, text=field_name + ":").pack(
+                        anchor="w", padx=20
+                    )
 
                     if field_type == "dropdown":
                         combo = ttk.Combobox(
@@ -201,7 +207,9 @@ class Gui:
                         entry.pack(fill="x", padx=20, pady=(0, 10))
                         entries[field_name] = entry
         else:
-            tk.Label(scrollable_frame, text="Nessun input richiesto.").pack(pady=(0, 10), padx=20)
+            tk.Label(scrollable_frame, text="Nessun input richiesto.").pack(
+                pady=(0, 10), padx=20
+            )
 
         # Result area
         result_frame = tk.Frame(scrollable_frame)
@@ -233,7 +241,9 @@ class Gui:
             text="Esegui",
             font=("Arial", 11),
             width=20,
-            command=partial(self._execute_operation, operation, entries, result_text, tree),
+            command=partial(
+                self._execute_operation, operation, entries, result_text, tree
+            ),
         ).pack(pady=20)
 
         op_window.transient(self._window)

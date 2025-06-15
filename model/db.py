@@ -223,7 +223,6 @@ def insert_work_shift(
     codice_lavoro,
     description,
 ) -> None:
-
     new_start_dt = to_datetime(new_start)
     new_end_dt = to_datetime(new_end)
 
@@ -241,7 +240,12 @@ def insert_work_shift(
         """
     )
     results = session.execute(
-        query, {"building_code": building_code, "floor_code": floor_code, "room_code": room_code}
+        query,
+        {
+            "building_code": building_code,
+            "floor_code": floor_code,
+            "room_code": room_code,
+        },
     )
     dict_list = _compress_to_dict_list(results)
 
@@ -296,11 +300,7 @@ def insert_work_shift(
 
 
 def insert_new_expense(
-    job_code,
-    contract_code,
-    date,
-    cost,
-    material_quantity_str
+    job_code, contract_code, date, cost, material_quantity_str
 ) -> None:
     date_dt = to_datetime(date)
     query = text(
@@ -325,11 +325,12 @@ def insert_new_expense(
 
     material_tuple_list: list[tuple[str, int]] = []
     if material_quantity_str:
-        for item in material_quantity_str.split(','):
-            parts = item.strip().split('-')
+        for item in material_quantity_str.split(","):
+            parts = item.strip().split("-")
             if len(parts) != 2:
                 raise ValueError(
-                    f"Invalid material entry format: '{item.strip()}'. Expected format 'material-quantity'.")
+                    f"Invalid material entry format: '{item.strip()}'. Expected format 'material-quantity'."
+                )
 
             material, quantity_str = parts
             material = material.strip()
@@ -337,7 +338,8 @@ def insert_new_expense(
                 quantity = int(quantity_str.strip())
             except ValueError:
                 raise ValueError(
-                    f"Invalid quantity for material '{material}': '{quantity_str.strip()}' is not an integer.")
+                    f"Invalid quantity for material '{material}': '{quantity_str.strip()}' is not an integer."
+                )
 
             material_tuple_list.append((material, quantity))
 
@@ -353,7 +355,7 @@ def insert_new_expense(
             {
                 "contract_code": contract_code,
                 "material_code": material_code,
-                "quantity": quantity
+                "quantity": quantity,
             },
         )
     session.commit()

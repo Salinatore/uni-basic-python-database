@@ -60,8 +60,10 @@ def threaded_handler(gui, func):
                 result = func(*args)
                 gui.run_on_ui_thread(lambda: gui.display_result(result))
             except Exception as e:
+
                 def error_handler(err=e):
                     gui.display_error(err)
+
                 gui.run_on_ui_thread(error_handler(e))
 
         threading.Thread(target=task, daemon=True).start()
